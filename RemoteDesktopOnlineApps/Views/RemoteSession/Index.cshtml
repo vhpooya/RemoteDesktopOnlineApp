@@ -1,0 +1,451 @@
+﻿@model IEnumerable<RemoteDesktopOnlineApps.Models.RemoteSession>
+@{
+    ViewData["Title"] = "مدیریت جلسات ریموت";
+}
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold"><i class="fas fa-laptop me-2"></i>جلسات ریموت دسکتاپ</h2>
+        <a asp-action="Connect" class="btn btn-primary">
+            <i class="fas fa-plus-circle me-1"></i> جلسه جدید
+        </a>
+    </div>
+
+    <!-- کارت وضعیت -->
+    <div class="row mb-4">
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card border-0 bg-primary bg-opacity-10 text-primary h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-uppercase fw-bold mb-1">جلسات فعال</h6>
+                            <h2 class="mb-0">@Model.Count(s => s.Status == "Active")</h2>
+                        </div>
+                        <div class="bg-primary bg-opacity-25 p-3 rounded">
+                            <i class="fas fa-plug fa-2x opacity-75"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card border-0 bg-success bg-opacity-10 text-success h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-uppercase fw-bold mb-1">امروز</h6>
+                            <h2 class="mb-0">@Model.Count(s => s.StartTime.Date == DateTime.Today)</h2>
+                        </div>
+                        <div class="bg-success bg-opacity-25 p-3 rounded">
+                            <i class="fas fa-calendar-day fa-2x opacity-75"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card border-0 bg-info bg-opacity-10 text-info h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-uppercase fw-bold mb-1">این هفته</h6>
+                            <h2 class="mb-0">@Model.Count(s => (DateTime.Now - s.StartTime).TotalDays <= 7)</h2>
+                        </div>
+                        <div class="bg-info bg-opacity-25 p-3 rounded">
+                            <i class="fas fa-calendar-week fa-2x opacity-75"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card border-0 bg-secondary bg-opacity-10 text-secondary h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-uppercase fw-bold mb-1">کل جلسات</h6>
+                            <h2 class="mb-0">@Model.Count()</h2>
+                        </div>
+                        <div class="bg-secondary bg-opacity-25 p-3 rounded">
+                            <i class="fas fa-history fa-2x opacity-75"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- نوار جستجو و فیلتر -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <input type="text" id="searchInput" class="form-control" placeholder="جستجو...">
+                        <button class="btn btn-outline-secondary" type="button">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <select id="statusFilter" class="form-select">
+                        <option value="">همه وضعیت‌ها</option>
+                        <option value="Active">فعال</option>
+                        <option value="Disconnected">قطع شده</option>
+                        <option value="Failed">ناموفق</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select id="dateFilter" class="form-select">
+                        <option value="">همه زمان‌ها</option>
+                        <option value="today">امروز</option>
+                        <option value="week">این هفته</option>
+                        <option value="month">این ماه</option>
+                    </select>
+                </div>
+                <div class="col-md-2 text-end">
+                    <button id="btnFilter" class="btn btn-primary w-100">
+                        <i class="fas fa-filter me-1"></i> فیلتر
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- لیست جلسات -->
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>شناسه</th>
+                            <th>سرور</th>
+                            <th>وضعیت</th>
+                            <th>زمان شروع</th>
+                            <th>مدت</th>
+                            <th>نوع اتصال</th>
+                            <th>عملیات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var session in Model.OrderByDescending(s => s.StartTime))
+                        {
+                            <tr class="align-middle @(session.Status == "Active" ? "table-primary" : "")">
+                                <td>@session.SessionId</td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="flex-shrink-0">
+                                            <i class="fas fa-server @(session.Status == "Active" ? "text-success" : "text-muted")"></i>
+                                        </div>
+                                        <div class="flex-grow-1 ms-2">
+                                            <div>@session.ServerName</div>
+                                            <small class="text-muted">@session.ServerIdentifier</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    @switch (session.Status)
+                                    {
+                                        case "Active":
+                                            <span class="badge bg-success">فعال</span>
+                                            break;
+                                        case "Disconnected":
+                                            <span class="badge bg-secondary">قطع شده</span>
+                                            break;
+                                        case "Failed":
+                                            <span class="badge bg-danger">ناموفق</span>
+                                            break;
+                                        case "Initializing":
+                                            <span class="badge bg-warning">در حال راه‌اندازی</span>
+                                            break;
+                                        default:
+                                            <span class="badge bg-info">@session.Status</span>
+                                            break;
+                                    }
+                                </td>
+                                <td>
+                                    <div>@session.StartTime.ToString("yyyy/MM/dd")</div>
+                                    <small class="text-muted">@session.StartTime.ToString("HH:mm")</small>
+                                </td>
+                                <td>
+                                    @if (session.EndTime.HasValue)
+                                    {
+                                        TimeSpan duration = session.EndTime.Value - session.StartTime;
+                                        <span>@(duration.Hours > 0 ? $"{duration.Hours} ساعت " : "")@(duration.Minutes) دقیقه</span>
+                                    }
+                                    else if (session.Status == "Active")
+                                    {
+                                        TimeSpan duration = DateTime.Now - session.StartTime;
+                                        <span class="text-success">
+                                            <i class="fas fa-circle fa-xs me-1"></i>
+                                            @(duration.Hours > 0 ? $"{duration.Hours} ساعت " : "")@(duration.Minutes) دقیقه
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span>-</span>
+                                    }
+                                </td>
+                                <td>
+                                    @switch (session.ConnectionType)
+                                    {
+                                        case "RemoteControl":
+                                            <span><i class="fas fa-desktop me-1"></i> کنترل از راه دور</span>
+                                            break;
+                                        case "FileTransfer":
+                                            <span><i class="fas fa-file-export me-1"></i> انتقال فایل</span>
+                                            break;
+                                        case "Chat":
+                                            <span><i class="fas fa-comments me-1"></i> چت</span>
+                                            break;
+                                        default:
+                                            <span>@session.ConnectionType</span>
+                                            break;
+                                    }
+                                </td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        @if (session.Status == "Active")
+                                        {
+                                            <a asp-action="Session" asp-route-id="@session.Id" class="btn btn-primary btn-sm">
+                                                <i class="fas fa-arrow-right me-1"></i> ادامه
+                                            </a>
+                                            <form asp-action="Disconnect" asp-route-id="@session.Id" method="post" class="d-inline">
+                                                <button type="submit" class="btn btn-danger btn-sm">
+                                                    <i class="fas fa-times me-1"></i> قطع
+                                                </button>
+                                            </form>
+                                        }
+                                        else if (session.IsPasswordSaved)
+                                        {
+                                            <a asp-action="ConnectWithSaved" asp-route-serverId="@session.ServerIdentifier" class="btn btn-success btn-sm">
+                                                <i class="fas fa-plug me-1"></i> اتصال مجدد
+                                            </a>
+                                        }
+                                        <button type="button" class="btn btn-info btn-sm"
+                                                data-bs-toggle="modal" data-bs-target="#sessionDetailModal"
+                                                data-session-id="@session.Id">
+                                            <i class="fas fa-info-circle me-1"></i> جزئیات
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                        @if (!Model.Any())
+                        {
+                            <tr>
+                                <td colspan="7" class="text-center py-5">
+                                    <div class="text-muted">
+                                        <i class="fas fa-laptop fa-3x mb-3 opacity-25"></i>
+                                        <h5>هنوز جلسه ریموتی ایجاد نشده است</h5>
+                                        <p>برای شروع، روی دکمه "جلسه جدید" کلیک کنید</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- پیجینیشن -->
+    @if (Model.Count() > 10)
+    {
+        <div class="d-flex justify-content-center mt-4">
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">قبلی</a>
+                    </li>
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">بعدی</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    }
+</div>
+
+<!-- مودال جزئیات جلسه -->
+<div class="modal fade" id="sessionDetailModal" tabindex="-1" aria-labelledby="sessionDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="sessionDetailModalLabel">جزئیات جلسه</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center py-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">در حال بارگذاری...</span>
+                    </div>
+                    <p class="mt-3">در حال دریافت اطلاعات جلسه...</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // نمایش جزئیات جلسه در مودال
+            $('#sessionDetailModal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget);
+                var sessionId = button.data('session-id');
+                var modal = $(this);
+
+                // اینجا می‌توان با AJAX اطلاعات جلسه را دریافت کرد
+                // برای نمونه یک تایمر می‌گذاریم
+                setTimeout(function() {
+                    var sessionDetails = `
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6 class="fw-bold">اطلاعات اصلی</h6>
+                                <table class="table table-sm">
+                                    <tr>
+                                        <th width="40%">شناسه جلسه:</th>
+                                        <td>SESSION-${sessionId}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>نام سرور:</th>
+                                        <td>سرور مرکزی</td>
+                                    </tr>
+                                    <tr>
+                                        <th>شناسه سرور:</th>
+                                        <td>SRV-12345</td>
+                                    </tr>
+                                    <tr>
+                                        <th>وضعیت:</th>
+                                        <td><span class="badge bg-success">فعال</span></td>
+                                    </tr>
+                                    <tr>
+                                        <th>نوع اتصال:</th>
+                                        <td>کنترل از راه دور</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-md-6">
+                                <h6 class="fw-bold">اطلاعات زمانی</h6>
+                                <table class="table table-sm">
+                                    <tr>
+                                        <th width="40%">زمان شروع:</th>
+                                        <td>1402/12/25 15:30</td>
+                                    </tr>
+                                    <tr>
+                                        <th>زمان پایان:</th>
+                                        <td>1402/12/25 16:45</td>
+                                    </tr>
+                                    <tr>
+                                        <th>مدت زمان:</th>
+                                        <td>1 ساعت و 15 دقیقه</td>
+                                    </tr>
+                                    <tr>
+                                        <th>کاربر:</th>
+                                        <td>کاربر پشتیبانی</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <h6 class="fw-bold">شرکت‌کنندگان</h6>
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>نام</th>
+                                            <th>زمان ورود</th>
+                                            <th>زمان خروج</th>
+                                            <th>وضعیت</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>کاربر پشتیبانی</td>
+                                            <td>15:30</td>
+                                            <td>16:45</td>
+                                            <td><span class="badge bg-secondary">خارج شده</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>کاربر مهمان</td>
+                                            <td>15:40</td>
+                                            <td>16:35</td>
+                                            <td><span class="badge bg-secondary">خارج شده</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <h6 class="fw-bold">فعالیت‌ها</h6>
+                                <div class="list-group">
+                                    <div class="list-group-item list-group-item-action">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <h6 class="mb-1">اتصال به سرور</h6>
+                                            <small>15:30</small>
+                                        </div>
+                                        <p class="mb-1">کاربر پشتیبانی به سرور متصل شد</p>
+                                    </div>
+                                    <div class="list-group-item list-group-item-action">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <h6 class="mb-1">انتقال فایل</h6>
+                                            <small>15:45</small>
+                                        </div>
+                                        <p class="mb-1">فایل report.pdf به سرور آپلود شد</p>
+                                    </div>
+                                    <div class="list-group-item list-group-item-action">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <h6 class="mb-1">قطع اتصال</h6>
+                                            <small>16:45</small>
+                                        </div>
+                                        <p class="mb-1">کاربر پشتیبانی اتصال را قطع کرد</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                    modal.find('.modal-body').html(sessionDetails);
+                }, 1500);
+            });
+
+            // جستجو و فیلتر
+            $('#btnFilter').click(function() {
+                var searchTerm = $('#searchInput').val().toLowerCase();
+                var statusFilter = $('#statusFilter').val();
+                var dateFilter = $('#dateFilter').val();
+
+                $('tbody tr').each(function() {
+                    var row = $(this);
+                    var serverName = row.find('td:nth-child(2)').text().toLowerCase();
+                    var status = row.find('td:nth-child(3)').text().toLowerCase();
+                    var date = row.find('td:nth-child(4)').text();
+
+                    var matchSearch = searchTerm === '' || serverName.includes(searchTerm);
+                    var matchStatus = statusFilter === '' || status.includes(statusFilter.toLowerCase());
+
+                    // فیلتر تاریخ - در واقعیت باید بر اساس تاریخ واقعی باشد
+                    var matchDate = true;
+                    if (dateFilter === 'today') {
+                        matchDate = date.includes(new Date().toISOString().split('T')[0]);
+                    }
+
+                    if (matchSearch && matchStatus && matchDate) {
+                        row.show();
+                    } else {
+                        row.hide();
+                    }
+                });
+            });
+        });
+    </script>
+}

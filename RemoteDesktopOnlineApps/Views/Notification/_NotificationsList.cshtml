@@ -1,0 +1,101 @@
+﻿@model List<Notification>
+
+@if (Model.Count > 0)
+{
+    <div class="notifications-list">
+        @foreach (var notification in Model)
+        {
+            <div id="notification-@notification.Id" class="notification-item @(notification.IsRead ? "" : "unread")">
+                <div class="notification-type @notification.Type.ToLower()">
+                    @switch (notification.Type)
+                    {
+                        case "Info":
+                            <i class="fas fa-info-circle"></i>
+                            break;
+                        case "Success":
+                            <i class="fas fa-check-circle"></i>
+                            break;
+                        case "Warning":
+                            <i class="fas fa-exclamation-triangle"></i>
+                            break;
+                        case "Error":
+                            <i class="fas fa-times-circle"></i>
+                            break;
+                        case "RemoteRequest":
+                            <i class="fas fa-desktop"></i>
+                            break;
+                        case "FileTransfer":
+                            <i class="fas fa-file-export"></i>
+                            break;
+                        case "Chat":
+                            <i class="fas fa-comment"></i>
+                            break;
+                        case "SecurityAlert":
+                            <i class="fas fa-shield-alt"></i>
+                            break;
+                        default:
+                            <i class="fas fa-bell"></i>
+                            break;
+                    }
+                </div>
+                <div class="notification-content">
+                    <div class="notification-header">
+                        <h5 class="notification-title">@notification.Title</h5>
+                        <span class="notification-time" title="@notification.Timestamp.ToString("yyyy/MM/dd HH:mm:ss")">
+                            @{
+                                var timeAgo = DateTime.Now - notification.Timestamp;
+                                string timeText;
+
+                                if (timeAgo.TotalMinutes < 1)
+                                    timeText = "اکنون";
+                                else if (timeAgo.TotalMinutes < 60)
+                                    timeText = $"{(int)timeAgo.TotalMinutes} دقیقه پیش";
+                                else if (timeAgo.TotalHours < 24)
+                                    timeText = $"{(int)timeAgo.TotalHours} ساعت پیش";
+                                else if (timeAgo.TotalDays < 30)
+                                    timeText = $"{(int)timeAgo.TotalDays} روز پیش";
+                                else
+                                    timeText = notification.Timestamp.ToString("yyyy/MM/dd");
+                            }
+                            @timeText
+                        </span>
+                    </div>
+                    <p class="notification-message">@notification.Message</p>
+                    @if (!string.IsNullOrEmpty(notification.Data))
+                    {
+                        <div class="notification-data small text-muted">
+                            @if (notification.Type == "RemoteRequest")
+                            {
+                                <a href="javascript:void(0)" class="btn btn-sm btn-outline-success accept-request-btn" data-id="@notification.Id" data-requester-id="@notification.RequesterId">پذیرش درخواست</a>
+                                <a href="javascript:void(0)" class="btn btn-sm btn-outline-danger reject-request-btn" data-id="@notification.Id" data-requester-id="@notification.RequesterId">رد درخواست</a>
+                            }
+                        </div>
+                    }
+                </div>
+                <div class="notification-actions">
+                    @if (!notification.IsRead)
+                    {
+                        <button class="btn btn-sm btn-outline-primary mark-read-btn" data-id="@notification.Id">
+                            <i class="fas fa-check-circle"></i>
+                        </button>
+                    }
+                    else
+                    {
+                        <button class="btn btn-sm btn-outline-secondary mark-read-btn" data-id="@notification.Id" disabled>
+                            <i class="fas fa-check"></i>
+                        </button>
+                    }
+                    <button class="btn btn-sm btn-outline-danger delete-notification-btn" data-id="@notification.Id">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="alert alert-info text-center">
+        <i class="fas fa-bell-slash"></i> هیچ اعلانی وجود ندارد.
+    </div>
+}

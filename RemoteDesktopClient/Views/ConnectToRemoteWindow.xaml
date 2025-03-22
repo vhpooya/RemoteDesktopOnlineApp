@@ -1,0 +1,63 @@
+﻿<Window x:Class="RemoteDesktopClient.Views.ConnectToRemoteWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RemoteDesktopClient.Views"
+        mc:Ignorable="d"
+        Title="اتصال به کامپیوتر راه دور" Height="300" Width="400"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        FlowDirection="RightToLeft">
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- عنوان -->
+        <TextBlock Grid.Row="0" Text="اتصال به کامپیوتر راه دور" FontSize="18" FontWeight="Bold" 
+                   HorizontalAlignment="Center" Margin="0,0,0,15"/>
+
+        <!-- توضیحات -->
+        <TextBlock Grid.Row="1" TextWrapping="Wrap" Margin="0,0,0,15">
+            برای اتصال به کامپیوتر دیگر، شناسه و رمز دسترسی آن را وارد کنید. این اطلاعات باید توسط کاربر کامپیوتر مقصد به شما ارائه شده باشد.
+        </TextBlock>
+
+        <!-- فرم اتصال -->
+        <Grid Grid.Row="2" Margin="0,0,0,15">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="شناسه کلاینت راه دور:" VerticalAlignment="Center" Margin="0,0,10,10"/>
+            <TextBox Grid.Row="0" Grid.Column="1" x:Name="txtRemoteId" Margin="0,0,0,10" Padding="5,3"/>
+
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="رمز دسترسی:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+            <PasswordBox Grid.Row="1" Grid.Column="1" x:Name="txtAccessKey" Margin="0" Padding="5,3"/>
+        </Grid>
+
+        <!-- گزینه‌های بیشتر -->
+        <CheckBox Grid.Row="3" x:Name="chkSaveCredentials" Content="ذخیره اطلاعات برای اتصال‌های بعدی" Margin="0,0,0,10"/>
+
+        <!-- راهنما -->
+        <TextBlock Grid.Row="4" TextWrapping="Wrap" Foreground="Gray" VerticalAlignment="Top">
+            نکته: شناسه و رمز دسترسی در صفحه وضعیت اتصال برنامه نمایش داده می‌شود. از کاربر مقابل بخواهید این اطلاعات را به شما اعلام کند.
+        </TextBlock>
+
+        <!-- دکمه‌ها -->
+        <StackPanel Grid.Row="5" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0">
+            <Button x:Name="btnConnect" Content="اتصال" Width="100" Margin="0,0,10,0" Padding="5" Click="BtnConnect_Click"/>
+            <Button x:Name="btnCancel" Content="انصراف" Width="100" Margin="10,0,0,0" Padding="5" Click="BtnCancel_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>

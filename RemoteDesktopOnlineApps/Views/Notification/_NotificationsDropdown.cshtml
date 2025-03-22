@@ -1,0 +1,225 @@
+﻿@using RemoteDesktopOnlineApps
+@using RemoteDesktopOnlineApps.Models
+
+<li class="nav-item dropdown">
+    <a class="nav-link notification-indicator" href="#" id="notificationDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="fas fa-bell"></i>
+        <span id="unreadNotificationBadge" class="notification-badge d-none">0</span>
+    </a>
+    <div class="dropdown-menu dropdown-menu-end notifications-dropdown" aria-labelledby="notificationDropdown">
+        <div class="dropdown-header">
+            <span>اعلان‌ها</span>
+            <button id="markAllReadDropdown" class="btn btn-sm btn-light">
+                <i class="fas fa-check-double"></i> خواندن همه
+            </button>
+        </div>
+        <div class="dropdown-body" id="notificationsContainer">
+            <div class="text-center p-3">
+                <div class="spinner-border spinner-border-sm text-primary" role="status">
+                    <span class="visually-hidden">در حال بارگیری...</span>
+                </div>
+                <p class="mt-2 mb-0">در حال بارگیری اعلان‌ها...</p>
+            </div>
+        </div>
+        <div class="dropdown-footer">
+            <a href="@Url.Action("Index", "Notification")" class="btn btn-sm btn-primary w-100">مشاهده همه</a>
+        </div>
+    </div>
+</li>
+
+<script>
+    // بارگیری اعلان‌های خوانده‌نشده در زمان باز شدن منو
+    $(document).ready(function() {
+        let notificationsLoaded = false;
+
+        // تابع به‌روزرسانی نشانگر اعلان‌ها
+        function updateNotificationBadge(count) {
+            const badge = $('#unreadNotificationBadge');
+            if (count > 0) {
+                badge.text(count);
+                badge.removeClass('d-none');
+            } else {
+                badge.addClass('d-none');
+            }
+        }
+
+        // تابع دریافت اعلان‌های خوانده‌نشده
+        function loadUnreadNotifications() {
+            $.ajax({
+                url: '@Url.Action("GetUnread", "Notification")',
+                type: 'GET',
+                success: function(notifications) {
+                    const container = $('#notificationsContainer');
+                    container.empty();
+
+                    if (notifications.length === 0) {
+                        container.html('<div class="text-center p-3"><i class="fas fa-bell-slash"></i> هیچ اعلان جدیدی ندارید.</div>');
+                    } else {
+                        notifications.forEach(notification => {
+                            let iconClass = 'fa-bell';
+                            let typeClass = '';
+
+                            switch (notification.type.toLowerCase()) {
+                                case 'info':
+                                    iconClass = 'fa-info-circle';
+                                    typeClass = 'text-primary';
+                                    break;
+                                case 'success':
+                                    iconClass = 'fa-check-circle';
+                                    typeClass = 'text-success';
+                                    break;
+                                case 'warning':
+                                    iconClass = 'fa-exclamation-triangle';
+                                    typeClass = 'text-warning';
+                                    break;
+                                case 'error':
+                                    iconClass = 'fa-times-circle';
+                                    typeClass = 'text-danger';
+                                    break;
+                                case 'remoterequest':
+                                    iconClass = 'fa-desktop';
+                                    typeClass = 'text-success';
+                                    break;
+                                case 'filetransfer':
+                                    iconClass = 'fa-file-export';
+                                    typeClass = 'text-secondary';
+                                    break;
+                                case 'chat':
+                                    iconClass = 'fa-comment';
+                                    typeClass = 'text-info';
+                                    break;
+                                case 'securityalert':
+                                    iconClass = 'fa-shield-alt';
+                                    typeClass = 'text-danger';
+                                    break;
+                            }
+
+                            // محاسبه زمان اعلان
+                            const notificationTime = new Date(notification.timestamp);
+                            const now = new Date();
+                            const diffMs = now - notificationTime;
+                            const diffMins = Math.round(diffMs / 60000);
+
+                            let timeText;
+                            if (diffMins < 1) {
+                                timeText = 'اکنون';
+                            } else if (diffMins < 60) {
+                                timeText = `${diffMins} دقیقه پیش`;
+                            } else if (diffMins < 1440) {
+                                timeText = `${Math.floor(diffMins / 60)} ساعت پیش`;
+                            } else {
+                                timeText = notificationTime.toLocaleDateString('fa-IR');
+                            }
+
+                            // ایجاد المان اعلان
+                            const notificationItem = `
+                                <div class="notification-item-small" data-id="${notification.id}">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas ${iconClass} ${typeClass} ml-2"></i>
+                                        <div class="flex-grow-1">
+                                            <div class="notification-title">${notification.title}</div>
+                                            <div class="notification-message">${notification.message}</div>
+                                            <div class="notification-time">${timeText}</div>
+                                        </div>
+                                        <button class="btn btn-sm btn-link p-0 mark-read-dropdown" data-id="${notification.id}">
+                                            <i class="fas fa-check"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            `;
+
+                            container.append(notificationItem);
+                        });
+
+                        // به‌روزرسانی نشانگر اعلان‌ها
+                        updateNotificationBadge(notifications.length);
+                    }
+
+                    notificationsLoaded = true;
+                },
+                error: function() {
+                    $('#notificationsContainer').html('<div class="text-center p-3 text-danger">خطا در بارگیری اعلان‌ها</div>');
+                }
+            });
+        }
+
+        // بررسی اعلان‌های جدید هر ۱ دقیقه
+        setInterval(function() {
+            if ($('#notificationDropdown').attr('aria-expanded') === 'true') {
+                loadUnreadNotifications();
+            } else {
+                $.ajax({
+                    url: '@Url.Action("GetUnread", "Notification")',
+                    type: 'GET',
+                    success: function(notifications) {
+                        updateNotificationBadge(notifications.length);
+                    }
+                });
+            }
+        }, 60000);
+
+        // بارگیری اعلان‌ها هنگام باز شدن منو
+        $('#notificationDropdown').on('shown.bs.dropdown', function() {
+            loadUnreadNotifications();
+        });
+
+        // علامت‌گذاری یک اعلان به‌عنوان خوانده‌شده
+        $(document).on('click', '.mark-read-dropdown', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const notificationId = $(this).data('id');
+            const notificationItem = $(this).closest('.notification-item-small');
+
+            $.ajax({
+                url: '@Url.Action("MarkAsRead", "Notification")',
+                type: 'POST',
+                data: { id: notificationId },
+                success: function(response) {
+                    if (response.success) {
+                        notificationItem.fadeOut(300, function() {
+                            $(this).remove();
+
+                            // به‌روزرسانی نشانگر اعلان‌ها
+                            const remainingNotifications = $('.notification-item-small').length;
+                            updateNotificationBadge(remainingNotifications);
+
+                            // اگر همه اعلان‌ها خوانده شدند
+                            if (remainingNotifications === 0) {
+                                $('#notificationsContainer').html('<div class="text-center p-3"><i class="fas fa-bell-slash"></i> هیچ اعلان جدیدی ندارید.</div>');
+                            }
+                        });
+                    }
+                }
+            });
+        });
+
+        // علامت‌گذاری همه اعلان‌ها به‌عنوان خوانده‌شده
+        $('#markAllReadDropdown').click(function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            $.ajax({
+                url: '@Url.Action("MarkAllAsRead", "Notification")',
+                type: 'POST',
+                success: function(response) {
+                    if (response.success) {
+                        $('.notification-item-small').fadeOut(300, function() {
+                            $('#notificationsContainer').html('<div class="text-center p-3"><i class="fas fa-bell-slash"></i> هیچ اعلان جدیدی ندارید.</div>');
+                            updateNotificationBadge(0);
+                        });
+                    }
+                }
+            });
+        });
+
+        // بارگیری اولیه وضعیت اعلان‌ها
+        $.ajax({
+            url: '@Url.Action("GetUnread", "Notification")',
+            type: 'GET',
+            success: function(notifications) {
+                updateNotificationBadge(notifications.length);
+            }
+        });
+    });
+</script>

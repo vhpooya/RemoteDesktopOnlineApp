@@ -1,0 +1,79 @@
+﻿@model RemoteDesktopOnlineApps.ViewModels.AccountRegisterViewModel
+@{
+    ViewData["Title"] = "ثبت‌نام";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">ثبت‌نام</h2>
+    <form asp-action="Register" method="post">
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label asp-for="FullName" class="form-label">نام کامل</label>
+                <input asp-for="FullName" class="form-control" placeholder="نام کامل خود را وارد کنید" />
+                <span asp-validation-for="FullName" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="NationalCode" class="form-label">کد ملی</label>
+                <input asp-for="NationalCode" class="form-control" placeholder="کد ملی خود را وارد کنید" />
+                <span asp-validation-for="NationalCode" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="UserName" class="form-label">نام کاربری</label>
+                <input asp-for="UserName" class="form-control" placeholder="نام کاربری خود را وارد کنید" />
+                <span asp-validation-for="UserName" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6 mb-3">
+               
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="UserPassword" class="form-label">کلمه عبور</label>
+                <input asp-for="UserPassword" type="password" class="form-control" placeholder="کلمه عبور خود را وارد کنید" />
+                <span asp-validation-for="UserPassword" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="ReUserPassword" class="form-label">تکرار کلمه عبور</label>
+                <input asp-for="ReUserPassword" type="password" class="form-control" placeholder="کلمه عبور خود را دوباره وارد کنید" />
+                <span asp-validation-for="ReUserPassword" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="TellNum" class="form-label">تلفن</label>
+                <input asp-for="TellNum" class="form-control" placeholder="تلفن خود را وارد کنید" />
+                <span asp-validation-for="TellNum" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="EMail" class="form-label">ایمیل</label>
+                <input asp-for="EMail" class="form-control" placeholder="ایمیل خود را وارد کنید" />
+                <span asp-validation-for="EMail" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="CompanyLocationCity" class="form-label">شهرستان محل کار</label>
+                <input asp-for="CompanyLocationCity" class="form-control" placeholder="شهرستان محل کار خود را وارد کنید" />
+                <span asp-validation-for="CompanyLocationCity" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="CompanyOfficeName" class="form-label">نام دفتر/شعبه</label>
+                <input asp-for="CompanyOfficeName" class="form-control" placeholder="نام دفتر یا شعبه را وارد کنید" />
+                <span asp-validation-for="CompanyOfficeName" class="text-danger"></span>
+            </div>
+
+            <div class="col-12 mb-3">
+                <button type="submit" class="btn btn-primary w-100">ثبت‌نام</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

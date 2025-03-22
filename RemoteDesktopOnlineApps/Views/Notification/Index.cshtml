@@ -1,0 +1,164 @@
+﻿@model List<Notification>
+@{
+    ViewData["Title"] = "اعلان‌ها";
+    Layout = "_Layout";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>اعلان‌ها</h2>
+        <div>
+            <button id="markAllReadBtn" class="btn btn-outline-primary">
+                <i class="fas fa-check-double"></i> علامت همه به‌عنوان خوانده‌شده
+            </button>
+            <button id="deleteReadBtn" class="btn btn-outline-danger">
+                <i class="fas fa-trash"></i> حذف خوانده‌شده‌ها
+            </button>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <ul class="nav nav-tabs card-header-tabs" id="notificationsTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="all-tab" data-bs-toggle="tab" data-bs-target="#all" type="button" role="tab" aria-controls="all" aria-selected="true">همه</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="unread-tab" data-bs-toggle="tab" data-bs-target="#unread" type="button" role="tab" aria-controls="unread" aria-selected="false">خوانده‌نشده</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="read-tab" data-bs-toggle="tab" data-bs-target="#read" type="button" role="tab" aria-controls="read" aria-selected="false">خوانده‌شده</button>
+                </li>
+            </ul>
+        </div>
+        <div class="card-body">
+            <div class="tab-content" id="notificationsTabContent">
+                <div class="tab-pane fade show active" id="all" role="tabpanel" aria-labelledby="all-tab">
+                    @await Html.PartialAsync("_NotificationsList", Model)
+                </div>
+                <div class="tab-pane fade" id="unread" role="tabpanel" aria-labelledby="unread-tab">
+                    @await Html.PartialAsync("_NotificationsList", Model.Where(n => !n.IsRead).ToList())
+                </div>
+                <div class="tab-pane fade" id="read" role="tabpanel" aria-labelledby="read-tab">
+                    @await Html.PartialAsync("_NotificationsList", Model.Where(n => n.IsRead).ToList())
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // علامت‌گذاری یک اعلان به‌عنوان خوانده‌شده
+            $('.mark-read-btn').click(function(e) {
+                e.preventDefault();
+                const notificationId = $(this).data('id');
+                const notificationItem = $(`#notification-${notificationId}`);
+
+                $.ajax({
+                    url: '@Url.Action("MarkAsRead", "Notification")',
+                    type: 'POST',
+                    data: { id: notificationId },
+                    success: function(response) {
+                        if (response.success) {
+                            notificationItem.removeClass('unread');
+                            notificationItem.find('.mark-read-btn').html('<i class="fas fa-check"></i>');
+                            showNotification('success', 'موفق', 'اعلان به‌عنوان خوانده‌شده علامت‌گذاری شد.');
+                            updateCounts();
+                        }
+                    },
+                    error: function() {
+                        showNotification('error', 'خطا', 'مشکلی در علامت‌گذاری اعلان رخ داده است.');
+                    }
+                });
+            });
+
+            // حذف یک اعلان
+            $('.delete-notification-btn').click(function(e) {
+                e.preventDefault();
+                const notificationId = $(this).data('id');
+                const notificationItem = $(`#notification-${notificationId}`);
+
+                if (confirm('آیا از حذف این اعلان اطمینان دارید؟')) {
+                    $.ajax({
+                        url: '@Url.Action("Delete", "Notification")',
+                        type: 'POST',
+                        data: { id: notificationId },
+                        success: function(response) {
+                            if (response.success) {
+                                notificationItem.fadeOut(300, function() {
+                                    $(this).remove();
+                                    updateCounts();
+                                });
+                                showNotification('success', 'موفق', 'اعلان با موفقیت حذف شد.');
+                            }
+                        },
+                        error: function() {
+                            showNotification('error', 'خطا', 'مشکلی در حذف اعلان رخ داده است.');
+                        }
+                    });
+                }
+            });
+
+            // علامت‌گذاری همه اعلان‌ها به‌عنوان خوانده‌شده
+            $('#markAllReadBtn').click(function(e) {
+                e.preventDefault();
+
+                $.ajax({
+                    url: '@Url.Action("MarkAllAsRead", "Notification")',
+                    type: 'POST',
+                    success: function(response) {
+                        if (response.success) {
+                            $('.notification-item.unread').removeClass('unread');
+                            $('.notification-item .mark-read-btn').html('<i class="fas fa-check"></i>');
+                            showNotification('success', 'موفق', `${response.count} اعلان به‌عنوان خوانده‌شده علامت‌گذاری شدند.`);
+                            updateCounts();
+                        }
+                    },
+                    error: function() {
+                        showNotification('error', 'خطا', 'مشکلی در علامت‌گذاری اعلان‌ها رخ داده است.');
+                    }
+                });
+            });
+
+            // حذف همه اعلان‌های خوانده‌شده
+            $('#deleteReadBtn').click(function(e) {
+                e.preventDefault();
+
+                if (confirm('آیا از حذف همه اعلان‌های خوانده‌شده اطمینان دارید؟')) {
+                    $.ajax({
+                        url: '@Url.Action("DeleteRead", "Notification")',
+                        type: 'POST',
+                        success: function(response) {
+                            if (response.success) {
+                                $('.notification-item:not(.unread)').fadeOut(300, function() {
+                                    $(this).remove();
+                                    updateCounts();
+                                });
+                                showNotification('success', 'موفق', `${response.count} اعلان حذف شدند.`);
+                            }
+                        },
+                        error: function() {
+                            showNotification('error', 'خطا', 'مشکلی در حذف اعلان‌ها رخ داده است.');
+                        }
+                    });
+                }
+            });
+
+            // به‌روزرسانی تعداد اعلان‌ها
+            function updateCounts() {
+                const totalCount = $('.notification-item').length;
+                const unreadCount = $('.notification-item.unread').length;
+                const readCount = totalCount - unreadCount;
+
+                $('#all-tab').text(`همه (${totalCount})`);
+                $('#unread-tab').text(`خوانده‌نشده (${unreadCount})`);
+                $('#read-tab').text(`خوانده‌شده (${readCount})`);
+            }
+
+            // فراخوانی تابع به‌روزرسانی تعداد اعلان‌ها در بارگذاری صفحه
+            updateCounts();
+        });
+    </script>
+}

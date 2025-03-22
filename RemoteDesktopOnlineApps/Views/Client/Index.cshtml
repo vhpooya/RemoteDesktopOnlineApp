@@ -1,0 +1,280 @@
+﻿@model RemoteDesktopOnlineApps.Models.ClientConnectionInfo
+@{
+    ViewData["Title"] = "اطلاعات اتصال کلاینت";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <!-- کارت اطلاعات اتصال -->
+            <div class="card shadow-lg border-0 mb-5">
+                <div class="card-header bg-gradient py-3 text-center text-white">
+                    <h3 class="mb-0"><i class="fas fa-desktop me-2"></i>اطلاعات اتصال کلاینت</h3>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row">
+                        <div class="col-md-5 text-center mb-4 mb-md-0">
+                            <div class="mb-4">
+                                <div class="bg-light rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 150px; height: 150px;">
+                                    <i class="fas fa-qrcode fa-5x text-primary"></i>
+                                </div>
+                                <h5>کد QR برای اتصال آسان</h5>
+                                <p class="text-muted small">کد QR را با دوربین دستگاه دیگر اسکن کنید</p>
+                                <div class="mt-3">
+                                    <button class="btn btn-outline-primary">
+                                        <i class="fas fa-print me-2"></i>چاپ کد QR
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="mt-5">
+                                <div class="d-flex align-items-center justify-content-center mb-3">
+                                    <div class="bg-success rounded-circle me-2" style="width: 12px; height: 12px;"></div>
+                                    <span class="fw-bold">وضعیت: آنلاین</span>
+                                </div>
+                                <p class="mb-2 text-center">
+                                    <span class="badge bg-primary">WebRTC فعال</span>
+                                    <span class="badge bg-success">اتصال امن</span>
+                                </p>
+                                <p class="text-muted small mb-0">آخرین بررسی وضعیت: @DateTime.Now</p>
+                            </div>
+                        </div>
+                        <div class="col-md-7 border-start-md">
+                            <h5 class="mb-3 pb-2 border-bottom">اطلاعات سیستم شما</h5>
+                            <table class="table table-hover">
+                                <tr>
+                                    <th style="width: 40%;">شناسه کلاینت:</th>
+                                    <td class="d-flex align-items-center">
+                                        <code class="me-2">@Model.ClientIdentifier</code>
+                                        <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip" title="کپی کردن" onclick="copyToClipboard('@Model.ClientIdentifier')">
+                                            <i class="fas fa-copy"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>نام کامپیوتر:</th>
+                                    <td>@Environment.MachineName</td>
+                                </tr>
+                                <tr>
+                                    <th>سیستم عامل:</th>
+                                    <td>@Environment.OSVersion</td>
+                                </tr>
+                                <tr>
+                                    <th>آدرس سرور:</th>
+                                    <td class="d-flex align-items-center">
+                                        <code class="me-2">@Model.ServerUrl</code>
+                                        <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip" title="کپی کردن" onclick="copyToClipboard('@Model.ServerUrl')">
+                                            <i class="fas fa-copy"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>زمان ثبت:</th>
+                                    <td>@DateTime.Now.AddDays(-3).ToString("yyyy/MM/dd HH:mm")</td>
+                                </tr>
+                            </table>
+
+                            <div class="alert alert-warning d-flex" role="alert">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-exclamation-triangle fa-2x me-2"></i>
+                                </div>
+                                <div>
+                                    <h6 class="alert-heading">توجه!</h6>
+                                    <p class="mb-0 small">اطلاعات بالا را فقط به کارشناسان پشتیبانی مورد اعتماد ارائه دهید. هر کسی با دسترسی به این اطلاعات می‌تواند به سیستم شما متصل شود.</p>
+                                </div>
+                            </div>
+
+                            <div class="mt-4 d-flex justify-content-between">
+                                <button class="btn btn-primary me-2">
+                                    <i class="fas fa-redo me-1"></i> بازسازی کلید اتصال
+                                </button>
+                                <button class="btn btn-outline-danger">
+                                    <i class="fas fa-user-shield me-1"></i> تنظیمات امنیتی
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- کارت‌های ویژگی -->
+            <div class="row g-4 mb-5">
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <div class="icon-box bg-primary bg-opacity-10 text-primary rounded-circle mx-auto mb-3">
+                                <i class="fas fa-shield-alt fa-2x"></i>
+                            </div>
+                            <h5>امنیت بالا</h5>
+                            <p class="text-muted">تمام ارتباطات با رمزنگاری انتها-به-انتها محافظت می‌شوند و هر اتصال نیاز به تایید صریح شما دارد.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <div class="icon-box bg-success bg-opacity-10 text-success rounded-circle mx-auto mb-3">
+                                <i class="fas fa-tachometer-alt fa-2x"></i>
+                            </div>
+                            <h5>عملکرد سریع</h5>
+                            <p class="text-muted">با استفاده از فناوری WebRTC، ارتباط با کمترین تاخیر و بهترین کیفیت برقرار می‌شود.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <div class="icon-box bg-info bg-opacity-10 text-info rounded-circle mx-auto mb-3">
+                                <i class="fas fa-tools fa-2x"></i>
+                            </div>
+                            <h5>امکانات پیشرفته</h5>
+                            <p class="text-muted">انتقال فایل، چت، تماس صوتی و امکانات پیشرفته دیگر برای دریافت بهترین پشتیبانی فنی.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- تاریخچه اتصالات -->
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-light d-flex justify-content-between align-items-center py-3">
+                    <h5 class="mb-0"><i class="fas fa-history me-2"></i>تاریخچه اتصالات اخیر</h5>
+                    <button class="btn btn-sm btn-outline-secondary">
+                        <i class="fas fa-download me-1"></i> دانلود گزارش
+                    </button>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>کارشناس</th>
+                                    <th>تاریخ و زمان</th>
+                                    <th>مدت</th>
+                                    <th>فعالیت</th>
+                                    <th>وضعیت</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>کارشناس پشتیبانی</td>
+                                    <td>1402/12/23 14:30</td>
+                                    <td>45 دقیقه</td>
+                                    <td>عیب‌یابی سیستم</td>
+                                    <td><span class="badge bg-success">موفق</span></td>
+                                </tr>
+                                <tr>
+                                    <td>کارشناس فنی</td>
+                                    <td>1402/12/20 10:15</td>
+                                    <td>30 دقیقه</td>
+                                    <td>نصب نرم‌افزار</td>
+                                    <td><span class="badge bg-success">موفق</span></td>
+                                </tr>
+                                <tr>
+                                    <td>کارشناس پشتیبانی</td>
+                                    <td>1402/12/15 16:40</td>
+                                    <td>20 دقیقه</td>
+                                    <td>رفع خطای شبکه</td>
+                                    <td><span class="badge bg-secondary">ناتمام</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer text-center">
+                    <a href="#" class="text-decoration-none">نمایش تاریخچه کامل</a>
+                </div>
+            </div>
+
+            <!-- راهنما -->
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0"><i class="fas fa-question-circle me-2"></i>راهنمای استفاده</h5>
+                </div>
+                <div class="card-body">
+                    <div class="accordion" id="accordionHelp">
+                        <div class="accordion-item border-0">
+                            <h2 class="accordion-header" id="headingOne">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                    چگونه به کارشناس پشتیبانی اجازه اتصال دهم؟
+                                </button>
+                            </h2>
+                            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionHelp">
+                                <div class="accordion-body">
+                                    <ol>
+                                        <li>شناسه کلاینت و کد اتصال خود را برای کارشناس پشتیبانی ارسال کنید.</li>
+                                        <li>کارشناس با استفاده از این اطلاعات، درخواست اتصال را ارسال می‌کند.</li>
+                                        <li>یک پنجره تایید روی سیستم شما نمایش داده می‌شود.</li>
+                                        <li>روی دکمه "اجازه دسترسی" کلیک کنید تا اتصال برقرار شود.</li>
+                                    </ol>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item border-0">
+                            <h2 class="accordion-header" id="headingTwo">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                    چگونه می‌توانم اتصال فعلی را قطع کنم؟
+                                </button>
+                            </h2>
+                            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionHelp">
+                                <div class="accordion-body">
+                                    <p>برای قطع اتصال فعلی، یکی از روش‌های زیر را انجام دهید:</p>
+                                    <ul>
+                                        <li>روی آیکون برنامه در نوار وظیفه کلیک راست کرده و گزینه "قطع اتصال" را انتخاب کنید.</li>
+                                        <li>در پنجره اصلی برنامه، روی دکمه "قطع اتصال" کلیک کنید.</li>
+                                        <li>کلیدهای ترکیبی Alt+Shift+End را فشار دهید.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item border-0">
+                            <h2 class="accordion-header" id="headingThree">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                    برنامه چه اطلاعاتی را به اشتراک می‌گذارد؟
+                                </button>
+                            </h2>
+                            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionHelp">
+                                <div class="accordion-body">
+                                    <p>این برنامه فقط در زمان تایید شما، اطلاعات زیر را به اشتراک می‌گذارد:</p>
+                                    <ul>
+                                        <li>تصویر صفحه نمایش</li>
+                                        <li>کنترل ماوس و کیبورد (در صورت اجازه دادن)</li>
+                                        <li>فایل‌های انتخاب شده برای انتقال</li>
+                                    </ul>
+                                    <p>در هیچ زمانی، اطلاعات حساس مانند کلمات عبور، فایل‌های شخصی یا داده‌های محرمانه به صورت خودکار به اشتراک گذاشته نمی‌شوند.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text)
+                .then(() => {
+                    toastr.success('متن با موفقیت کپی شد');
+                })
+                .catch(() => {
+                    toastr.error('خطا در کپی کردن متن');
+                });
+        }
+
+        $(document).ready(function() {
+            // تنظیم تولتیپ‌ها
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl)
+            });
+
+            // شبیه‌سازی بررسی وضعیت
+            setInterval(function() {
+                // در اینجا می‌توان وضعیت واقعی اتصال را بررسی کرد
+                // برای نمونه، کد ثابت نوشته شده است
+            }, 60000);
+        });
+    </script>
+}

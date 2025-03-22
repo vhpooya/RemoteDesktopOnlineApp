@@ -1,0 +1,39 @@
+﻿@model IEnumerable<Users>
+@{
+    ViewData["Title"] = "لیست کاربران";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">لیست کاربران</h2>
+
+    <!-- دکمه ثبت کاربر جدید -->
+    <div class="text-end mb-3">
+        <a href="@Url.Action("Register", "Account")" class="btn btn-success">ثبت کاربر جدید</a>
+    </div>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>نام کامل</th>
+                <th>نام کاربری</th>
+                <th>ایمیل</th>
+                <th>تلفن</th>
+                <th>عملیات</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model)
+            {
+                <tr>
+                    <td>@user.FullName</td>
+                    <td>@user.UserName</td>
+                    <td>@user.Email</td>
+                    <td>@user.Phone</td>
+                    <td>
+                        <a href="@Url.Action("EditProfile", "Account", new { id = user.Id })" class="btn btn-warning btn-sm">ویرایش</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

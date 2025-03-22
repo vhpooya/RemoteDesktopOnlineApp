@@ -1,0 +1,785 @@
+﻿@model RemoteDesktopOnlineApps.ViewModels.RemoteSessionViewModel
+    ViewData["Title"] = "جلسه ریموت: " + @Model.Session.ServerName;
+    Layout = "_LayoutFullWidth"; // لایه کامل عرض برای جلسه ریموت
+}
+
+<div class="remote-session-container">
+    <!-- نوار ابزار بالا -->
+    <div class="remote-toolbar d-flex justify-content-between align-items-center bg-dark text-white p-2">
+        <div class="d-flex align-items-center">
+            <a href="@Url.Action("Index", "RemoteSession")" class="btn btn-outline-light btn-sm me-2" data-bs-toggle="tooltip" title="بازگشت به لیست جلسات">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <div class="d-flex align-items-center">
+                <div class="rounded-circle connection-status me-2" style="width: 10px; height: 10px;"></div>
+                <span class="fw-bold">@Model.Session.ServerName</span>
+                <span class="badge bg-secondary mx-2">@Model.Session.ServerIdentifier</span>
+                <span id="connectionStatusText" class="badge bg-success">متصل</span>
+            </div>
+        </div>
+        <div class="d-flex">
+            <div class="dropdown me-2">
+                <button class="btn btn-outline-light btn-sm dropdown-toggle" type="button" id="participantsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-users me-1"></i> شرکت‌کنندگان
+                    <span class="badge bg-primary ms-1" id="participantsCount">1</span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="participantsDropdown" style="width: 280px;" id="participantsList">
+                    <li><h6 class="dropdown-header">شرکت‌کنندگان فعال</h6></li>
+                    <li>
+                        <a class="dropdown-item d-flex justify-content-between align-items-center" href="#">
+                            <div>
+                                <i class="fas fa-user-shield text-primary me-1"></i> شما (پشتیبان)
+                            </div>
+                            <span class="badge bg-success rounded-pill">آنلاین</span>
+                        </a>
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                        <a class="dropdown-item d-flex justify-content-between align-items-center" href="#">
+                            <div>
+                                <i class="fas fa-desktop text-secondary me-1"></i> سیستم مشتری
+                            </div>
+                            <span class="badge bg-success rounded-pill">آنلاین</span>
+                        </a>
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                        <a class="dropdown-item text-primary text-center" href="#" data-bs-toggle="modal" data-bs-target="#inviteModal">
+                            <i class="fas fa-user-plus me-1"></i> دعوت از کاربر جدید
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="btn-group me-2" role="group">
+                <button type="button" class="btn btn-outline-light btn-sm" data-bs-toggle="tooltip" title="حالت مشاهده فقط" id="btnViewOnly">
+                    <i class="fas fa-eye"></i>
+                </button>
+                <button type="button" class="btn btn-outline-light btn-sm active" data-bs-toggle="tooltip" title="حالت کنترل کامل" id="btnFullControl">
+                    <i class="fas fa-mouse-pointer"></i>
+                </button>
+            </div>
+
+            <div class="btn-group me-2" role="group">
+                <button type="button" class="btn btn-outline-light btn-sm" data-bs-toggle="tooltip" title="ارسال Ctrl+Alt+Del" id="btnSendCAD">
+                    <i class="fas fa-keyboard"></i>
+                </button>
+                <button type="button" class="btn btn-outline-light btn-sm" data-bs-toggle="tooltip" title="تغییر اندازه" id="btnChangeScale">
+                    <i class="fas fa-expand"></i>
+                </button>
+            </div>
+
+            <div class="btn-group me-2" role="group">
+                <button type="button" class="btn btn-outline-light btn-sm" id="btnChat" data-bs-toggle="tooltip" title="چت">
+                    <i class="fas fa-comments"></i>
+                </button>
+                <button type="button" class="btn btn-outline-light btn-sm" id="btnFileTransfer" data-bs-toggle="tooltip" title="انتقال فایل">
+                    <i class="fas fa-file-export"></i>
+                </button>
+                <button type="button" class="btn btn-outline-light btn-sm" id="btnAudioCall" data-bs-toggle="tooltip" title="تماس صوتی">
+                    <i class="fas fa-phone"></i>
+                </button>
+            </div>
+
+            <!-- دکمه آمار اتصال -->
+            <div class="dropdown me-2">
+                <button class="btn btn-outline-light btn-sm" type="button" id="statsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-chart-line"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-end p-2" aria-labelledby="statsDropdown" style="width: 300px;">
+                    <h6 class="dropdown-header">آمار اتصال</h6>
+                    <div class="connection-stats p-2">
+                        <div class="row g-2 mb-1">
+                            <div class="col-6">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-tachometer-alt text-primary me-2"></i>
+                                    <small>سرعت اتصال:</small>
+                                </div>
+                                <div class="px-4">
+                                    <strong id="connectionSpeed">0 Kbps</strong>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-stopwatch text-warning me-2"></i>
+                                    <small>تأخیر:</small>
+                                </div>
+                                <div class="px-4">
+                                    <strong id="latency">0 ms</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row g-2 mb-1">
+                            <div class="col-6">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-film text-info me-2"></i>
+                                    <small>نرخ فریم:</small>
+                                </div>
+                                <div class="px-4">
+                                    <strong id="fps">0 FPS</strong>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-signal text-success me-2"></i>
+                                    <small>کیفیت:</small>
+                                </div>
+                                <div class="px-4">
+                                    <strong id="connectionQuality">نامشخص</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row g-2 mb-1">
+                            <div class="col-6">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-times-circle text-danger me-2"></i>
+                                    <small>از دست رفتن بسته:</small>
+                                </div>
+                                <div class="px-4">
+                                    <strong id="packetLoss">0%</strong>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-desktop text-secondary me-2"></i>
+                                    <small>وضوح تصویر:</small>
+                                </div>
+                                <div class="px-4">
+                                    <strong id="resolution">نامشخص</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-microchip text-primary me-2"></i>
+                                    <small>مصرف CPU:</small>
+                                </div>
+                                <div class="px-4">
+                                    <strong id="cpuUsage">0%</strong>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-memory text-info me-2"></i>
+                                    <small>مصرف حافظه:</small>
+                                </div>
+                                <div class="px-4">
+                                    <strong id="memoryUsage">0 MB</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dropdown me-2">
+                <button class="btn btn-outline-light btn-sm dropdown-toggle" type="button" id="moreOptionsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-ellipsis-v"></i>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="moreOptionsDropdown">
+                    <li><a class="dropdown-item" href="#" id="btnSystemInfo"><i class="fas fa-desktop me-2"></i>اطلاعات سیستم</a></li>
+                    <li><a class="dropdown-item" href="#" id="btnSessionReport"><i class="fas fa-clipboard-list me-2"></i>گزارش جلسه</a></li>
+                    <li><a class="dropdown-item" href="#" id="btnSessionSettings"><i class="fas fa-cog me-2"></i>تنظیمات جلسه</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                        <form asp-action="Disconnect" asp-route-id="@Model.Session.SessionId" method="post" id="disconnectForm">
+                            <a class="dropdown-item text-danger" href="#" id="btnDisconnect">
+                                <i class="fas fa-power-off me-2"></i>قطع اتصال
+                            </a>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- قسمت اصلی صفحه -->
+    <div class="remote-content-container d-flex position-relative">
+        <!-- نمایش صفحه ریموت -->
+        <div class="remote-screen-area flex-grow-1" id="remoteScreenContainer">
+            <div class="text-center p-5 connecting-message" id="connectingMessage">
+                <div class="spinner-border text-primary mb-3" role="status">
+                    <span class="visually-hidden">در حال اتصال...</span>
+                </div>
+                <h4>در حال برقراری ارتباط با @Model.Session.ServerName</h4>
+                <p class="text-muted" id="connectingStatus">در حال مذاکره با سرور مقصد...</p>
+            </div>
+            <div id="remoteScreenPlaceholder" class="d-none position-relative">
+                <!-- صفحه نمایش ریموت اینجا قرار می‌گیرد -->
+                <video id="remoteVideo" autoplay playsinline muted class="remote-video"></video>
+                <canvas id="remoteCanvas" class="remote-canvas"></canvas>
+                <div class="remote-cursor" id="remoteCursor">
+                    <i class="fas fa-mouse-pointer"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- پنل چت - به صورت پیش فرض مخفی -->
+        <div class="remote-sidebar d-none" id="chatPanel">
+            <div class="card h-100 border-0 rounded-0">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center py-2">
+                    <h6 class="mb-0"><i class="fas fa-comments me-2"></i>گفتگو</h6>
+                    <button type="button" class="btn-close btn-close-white btn-sm" id="btnCloseChat"></button>
+                </div>
+                <div class="card-body p-0 d-flex flex-column">
+                    <div class="chat-messages flex-grow-1 p-2" id="chatMessages">
+                        <div class="text-center text-muted my-3">
+                            <small>ابتدای مکالمه</small>
+                        </div>
+                        <!-- پیام‌های چت اینجا اضافه می‌شوند -->
+                    </div>
+                    <div class="chat-input p-2 border-top">
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="messageInput" placeholder="پیام خود را بنویسید...">
+                            <button class="btn btn-primary" type="button" id="btnSendMessage">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- پنل انتقال فایل - به صورت پیش فرض مخفی -->
+        <div class="remote-sidebar d-none" id="fileTransferPanel">
+            <div class="card h-100 border-0 rounded-0">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center py-2">
+                    <h6 class="mb-0"><i class="fas fa-file-export me-2"></i>انتقال فایل</h6>
+                    <button type="button" class="btn-close btn-close-white btn-sm" id="btnCloseFileTransfer"></button>
+                </div>
+                <div class="card-body">
+                    <ul class="nav nav-tabs mb-3" id="fileTransferTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="upload-tab" data-bs-toggle="tab" data-bs-target="#upload-content" type="button" role="tab" aria-controls="upload-content" aria-selected="true">
+                                <i class="fas fa-upload me-1"></i> آپلود
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="download-tab" data-bs-toggle="tab" data-bs-target="#download-content" type="button" role="tab" aria-controls="download-content" aria-selected="false">
+                                <i class="fas fa-download me-1"></i> دانلود
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="browser-tab" data-bs-toggle="tab" data-bs-target="#browser-content" type="button" role="tab" aria-controls="browser-content" aria-selected="false">
+                                <i class="fas fa-folder-open me-1"></i> مرورگر فایل
+                            </button>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="fileTransferTabContent">
+                        <div class="tab-pane fade show active" id="upload-content" role="tabpanel" aria-labelledby="upload-tab">
+                            <form id="uploadForm">
+                                <div class="mb-3">
+                                    <label class="form-label">انتخاب فایل</label>
+                                    <input class="form-control" type="file" id="fileUpload">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">مسیر مقصد</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" value="C:\Users\Client\Desktop" id="uploadDestinationPath">
+                                        <button class="btn btn-outline-secondary" type="button" id="btnBrowseUploadDestination">
+                                            <i class="fas fa-folder-open"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="d-grid">
+                                    <button type="button" class="btn btn-primary" id="btnStartUpload">
+                                        <i class="fas fa-upload me-1"></i> شروع آپلود
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="tab-pane fade" id="download-content" role="tabpanel" aria-labelledby="download-tab">
+                            <form id="downloadForm">
+                                <div class="mb-3">
+                                    <label class="form-label">مسیر فایل در سیستم مشتری</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="remoteFilePath">
+                                        <button class="btn btn-outline-secondary" type="button" id="btnBrowseRemoteFile">
+                                            <i class="fas fa-folder-open"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">مسیر ذخیره محلی</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" value="دانلودها" id="localDestinationPath">
+                                        <button class="btn btn-outline-secondary" type="button" id="btnBrowseLocalDestination">
+                                            <i class="fas fa-folder-open"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="d-grid">
+                                    <button type="button" class="btn btn-primary" id="btnStartDownload">
+                                        <i class="fas fa-download me-1"></i> شروع دانلود
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="tab-pane fade" id="browser-content" role="tabpanel" aria-labelledby="browser-tab">
+                            <div class="mb-3">
+                                <label class="form-label">مسیر فعلی</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" value="C:\Users\Client\Documents" id="currentBrowserPath">
+                                    <button class="btn btn-outline-secondary" type="button" id="btnNavigateUp">
+                                        <i class="fas fa-arrow-up"></i>
+                                    </button>
+                                    <button class="btn btn-outline-secondary" type="button" id="btnRefreshDirectory">
+                                        <i class="fas fa-sync"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="list-group file-browser" id="fileBrowserContent">
+                                <!-- محتوای مرورگر فایل با JavaScript پر می‌شود -->
+                                <div class="text-center p-3">
+                                    <div class="spinner-border spinner-border-sm text-primary" role="status">
+                                        <span class="visually-hidden">در حال بارگذاری...</span>
+                                    </div>
+                                    <p class="mb-0 small">در حال بارگذاری محتوای پوشه...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- پیشرفت انتقال فایل -->
+                    <div class="transfer-progress mt-3 d-none" id="transferProgressContainer">
+                        <label class="form-label d-flex justify-content-between">
+                            <span id="transferFileName">در حال انتقال فایل...</span>
+                            <span id="transferPercent">0%</span>
+                        </label>
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated" id="transferProgressBar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <div class="d-flex justify-content-between mt-1">
+                            <small class="text-muted" id="transferSpeed">0 KB/s</small>
+                            <small class="text-muted" id="transferRemaining">محاسبه زمان...</small>
+                        </div>
+                        <div class="d-flex justify-content-between mt-2">
+                            <button class="btn btn-sm btn-outline-secondary" id="btnPauseTransfer">
+                                <i class="fas fa-pause me-1"></i> توقف موقت
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger" id="btnCancelTransfer">
+                                <i class="fas fa-times me-1"></i> لغو
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- نوار وضعیت پایین -->
+    <div class="remote-statusbar bg-light d-flex justify-content-between align-items-center p-1 border-top">
+        <div>
+            <small><i class="fas fa-info-circle me-1 text-muted"></i><span id="statusInfo">اتصال برقرار شد</span></small>
+        </div>
+        <div>
+            <small class="mx-2"><i class="fas fa-tachometer-alt me-1 text-muted"></i><span id="connectionSpeed">0 Kbps</span></small>
+            <small class="mx-2"><i class="fas fa-clock me-1 text-muted"></i><span id="sessionTime">00:00:00</span></small>
+            <small class="mx-2"><i class="fas fa-signal me-1 text-success"></i><span id="connectionQualityText">در حال ارزیابی...</span></small>
+        </div>
+    </div>
+</div>
+
+<!-- مودال دعوت کاربر -->
+<div class="modal fade" id="inviteModal" tabindex="-1" aria-labelledby="inviteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="inviteModalLabel">دعوت از کاربر جدید</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label">جستجوی کاربر</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="userSearchInput" placeholder="نام یا نام کاربری...">
+                        <button class="btn btn-outline-secondary" type="button" id="btnSearchUser">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="list-group" id="userSearchResults">
+                    <!-- نتایج جستجو اینجا نمایش داده می‌شوند -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">انصراف</button>
+                <button type="button" class="btn btn-primary" id="btnSendInvite">ارسال دعوت</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- مودال تایید قطع اتصال -->
+<div class="modal fade" id="disconnectModal" tabindex="-1" aria-labelledby="disconnectModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="disconnectModalLabel">قطع اتصال</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>آیا از قطع اتصال به سرور <strong>@Model.Session.ServerName</strong> اطمینان دارید؟</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">انصراف</button>
+                <button type="button" class="btn btn-danger" id="btnConfirmDisconnect">قطع اتصال</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- مودال تماس صوتی -->
+<div class="modal fade" id="audioCallModal" tabindex="-1" aria-labelledby="audioCallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="audioCallModalLabel">تماس صوتی</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center py-4">
+                <div class="mb-3">
+                    <i class="fas fa-phone-volume fa-4x text-primary"></i>
+                </div>
+                <h5 id="callStatus">در حال برقراری تماس...</h5>
+                <p class="text-muted mb-0" id="callDuration">00:00</p>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-danger rounded-circle" id="btnEndCall">
+                    <i class="fas fa-phone-slash"></i>
+                </button>
+                <button type="button" class="btn btn-outline-primary rounded-circle" id="btnMute">
+                    <i class="fas fa-microphone"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- مودال اطلاعات سیستم -->
+<div class="modal fade" id="systemInfoModal" tabindex="-1" aria-labelledby="systemInfoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-info text-white">
+                <h5 class="modal-title" id="systemInfoModalLabel">اطلاعات سیستم</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="border-bottom pb-2 mb-3">اطلاعات اصلی</h6>
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <tr>
+                                    <th style="width: 40%;">سیستم عامل:</th>
+                                    <td id="osInfo">در حال بارگزاری...</td>
+                                </tr>
+                                <tr>
+                                    <th>نام کامپیوتر:</th>
+                                    <td id="computerName">در حال بارگزاری...</td>
+                                </tr>
+                                <tr>
+                                    <th>نام کاربری:</th>
+                                    <td id="userName">در حال بارگزاری...</td>
+                                </tr>
+                                <tr>
+                                    <th>معماری پردازنده:</th>
+                                    <td id="cpuArch">در حال بارگزاری...</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="border-bottom pb-2 mb-3">منابع سیستم</h6>
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <tr>
+                                    <th style="width: 40%;">مصرف CPU:</th>
+                                    <td id="cpuUsageInfo">در حال بارگزاری...</td>
+                                </tr>
+                                <tr>
+                                    <th>حافظه کل:</th>
+                                    <td id="totalMemory">در حال بارگزاری...</td>
+                                </tr>
+                                <tr>
+                                    <th>حافظه در دسترس:</th>
+                                    <td id="availableMemory">در حال بارگزاری...</td>
+                                </tr>
+                                <tr>
+                                    <th>مصرف حافظه:</th>
+                                    <td>
+                                        <div class="progress" style="height: 10px;">
+                                            <div id="memoryUsageBar" class="progress-bar bg-info" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <h6 class="border-bottom pb-2 mb-3 mt-4">اطلاعات دیسک‌ها</h6>
+                <div class="table-responsive">
+                    <table class="table table-sm" id="diskInfoTable">
+                        <thead>
+                            <tr>
+                                <th>نام</th>
+                                <th>نوع</th>
+                                <th>فضای کل</th>
+                                <th>فضای آزاد</th>
+                                <th>استفاده شده</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="5" class="text-center">در حال بارگزاری اطلاعات دیسک‌ها...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h6 class="border-bottom pb-2 mb-3 mt-4">پردازه‌های فعال</h6>
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover" id="processesTable">
+                        <thead>
+                            <tr>
+                                <th>نام پردازه</th>
+                                <th>شناسه (PID)</th>
+                                <th>مصرف CPU</th>
+                                <th>مصرف حافظه</th>
+                                <th>وضعیت</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="5" class="text-center">در حال بارگزاری اطلاعات پردازه‌ها...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btnRefreshSystemInfo">
+                    <i class="fas fa-sync-alt me-1"></i> بروزرسانی
+                </button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <link href="~/css/remotesetionstylesheet.css" rel="stylesheet" />
+}
+
+@section Scripts {
+  
+   
+    <script src="~/js/signalr.min.js"></script>
+    <script src="~/js/webrtc-stats.js"></script>
+    <script>
+        // متغیرهای سراسری
+        let connection; // اتصال SignalR
+        let peerConnection; // اتصال WebRTC
+        let statsManager; // مدیریت آمار
+        let localStream; // جریان محلی
+        let remoteStream; // جریان ریموت
+        let dataChannel; // کانال داده
+        let sessionId = @Model.Session.SessionId; // شناسه جلسه
+        let sessionStartTime = new Date(); // زمان شروع جلسه
+        let isConnected = false; // وضعیت اتصال
+        let isViewOnly = false; // حالت فقط مشاهده
+        let fileTransfers = {}; // انتقال‌های فایل فعال
+
+        // تنظیمات WebRTC
+        const webrtcConfig = {
+            iceServers: [
+                { urls: 'stun:stun.l.google.com:19302' },
+                { urls: 'stun:stun1.l.google.com:19302' }
+            ]
+        };
+
+        $(document).ready(function() {
+            // تنظیم تولتیپ‌ها
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl)
+            });
+
+            // راه‌اندازی اتصال SignalR
+            initializeSignalRConnection();
+
+            // نمایش/مخفی کردن پنل چت
+            $('#btnChat').click(function() {
+                $('#chatPanel').toggleClass('d-none');
+                $('#fileTransferPanel').addClass('d-none');
+            });
+
+            $('#btnCloseChat').click(function() {
+                $('#chatPanel').addClass('d-none');
+            });
+
+            // نمایش/مخفی کردن پنل انتقال فایل
+            $('#btnFileTransfer').click(function() {
+                $('#fileTransferPanel').toggleClass('d-none');
+                $('#chatPanel').addClass('d-none');
+            });
+
+            $('#btnCloseFileTransfer').click(function() {
+                $('#fileTransferPanel').addClass('d-none');
+            });
+
+            // کنترل حالت‌های مشاهده و کنترل
+            $('#btnViewOnly').click(function() {
+                isViewOnly = true;
+                $(this).addClass('active');
+                $('#btnFullControl').removeClass('active');
+                $('#remoteCanvas').css('pointer-events', 'none');
+                updateStatusInfo('حالت مشاهده فعال شد');
+            });
+
+            $('#btnFullControl').click(function() {
+                isViewOnly = false;
+                $(this).addClass('active');
+                $('#btnViewOnly').removeClass('active');
+                $('#remoteCanvas').css('pointer-events', 'auto');
+                updateStatusInfo('حالت کنترل کامل فعال شد');
+            });
+
+            // قطع اتصال
+            $('#btnDisconnect').click(function() {
+                $('#disconnectModal').modal('show');
+            });
+
+            $('#btnConfirmDisconnect').click(function() {
+                disconnectFromServer();
+                $('#disconnectForm').submit();
+            });
+
+            // تماس صوتی
+            $('#btnAudioCall').click(function() {
+                startAudioCall();
+            });
+
+            $('#btnEndCall').click(function() {
+                endAudioCall();
+            });
+
+            // اطلاعات سیستم
+            $('#btnSystemInfo').click(function() {
+                $('#systemInfoModal').modal('show');
+                getSystemInfo();
+            });
+
+            // انتقال فایل
+            $('#btnStartUpload').click(function() {
+                startFileUpload();
+            });
+
+            $('#btnStartDownload').click(function() {
+                startFileDownload();
+            });
+
+            $('#btnCancelTransfer').click(function() {
+                cancelCurrentTransfer();
+            });
+
+            // ارسال پیام چت
+            $('#btnSendMessage').click(function() {
+                sendChatMessage();
+            });
+
+            $('#messageInput').keypress(function(e) {
+                if (e.which === 13) {
+                    sendChatMessage();
+                    return false;
+                }
+            });
+
+            // ارسال کلید ترکیبی Ctrl+Alt+Del
+            $('#btnSendCAD').click(function() {
+                sendSpecialKey('CAD');
+            });
+
+            // تغییر مقیاس صفحه
+            $('#btnChangeScale').click(function() {
+                toggleFullScreen();
+            });
+
+            // نمایش زمان جلسه
+            setInterval(updateSessionTime, 1000);
+        });
+
+        // بروزرسانی زمان جلسه
+        function updateSessionTime() {
+            const now = new Date();
+            const elapsedMs = now - sessionStartTime;
+
+            const hours = Math.floor(elapsedMs / (1000 * 60 * 60));
+            const minutes = Math.floor((elapsedMs % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((elapsedMs % (1000 * 60)) / 1000);
+
+            const timeStr =
+                (hours < 10 ? '0' + hours : hours) + ':' +
+                (minutes < 10 ? '0' + minutes : minutes) + ':' +
+                (seconds < 10 ? '0' + seconds : seconds);
+
+            $('#sessionTime').text(timeStr);
+        }
+
+        // نمایش خطای اتصال
+        function showConnectionError(message) {
+            // پنهان کردن پیام اتصال
+            $('#connectingMessage').hide();
+
+            // نمایش پیام خطا
+            $('<div class="alert alert-danger m-3" role="alert">')
+                .html('<i class="fas fa-exclamation-triangle me-2"></i>' + message)
+                .appendTo('#remoteScreenContainer');
+
+            // نمایش توست
+            toastr.error(message);
+        }
+
+        // بروزرسانی UI با آمار اتصال
+        function updateUIWithConnectionStats(stats) {
+            // به‌روزرسانی نوار وضعیت
+            $('#connectionSpeed').text(`${stats.BandwidthUsage} Kbps`);
+
+            // تعیین متن کیفیت اتصال
+            let qualityText = 'نامشخص';
+            let qualityClass = 'text-muted';
+
+            switch (stats.ConnectionQuality) {
+                case 1: // Poor
+                    qualityText = 'ضعیف';
+                    qualityClass = 'text-danger';
+                    break;
+                case 2: // Fair
+                    qualityText = 'متوسط';
+                    qualityClass = 'text-warning';
+                    break;
+                case 3: // Good
+                    qualityText = 'خوب';
+                    qualityClass = 'text-info';
+                    break;
+                case 4: // Excellent
+                    qualityText = 'عالی';
+                    qualityClass = 'text-success';
+                    break;
+            }
+
+            // به‌روزرسانی کیفیت اتصال
+            $('#connectionQualityText').text(qualityText);
+
+            // حذف کلاس‌های قبلی
+            $('#connectionQualityText').removeClass('text-danger text-warning text-info text-success text-muted');
+
+            // اضافه کردن کلاس جدید
+            $('#connectionQualityText').addClass(qualityClass);
+        }
+
+        // راه‌اندازی اتصال SignalR و ادامه کد...
+    </script>
+}

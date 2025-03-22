@@ -1,0 +1,546 @@
+Folder PATH listing for volume New Volume
+Volume serial number is 94FB-4D16
+E:.
+|   appsettings.Development.json
+|   appsettings.json
+|   libman.json
+|   Program.cs
+|   ProjectStructure.md
+|   project_structure.txt
+|   RemoteDesktopOnlineApps.csproj
+|   RemoteDesktopOnlineApps.csproj.user
+|   
++---bin
+|   \---Debug
+|       \---net9.0
+|           |   appsettings.Development.json
+|           |   appsettings.json
+|           |   Azure.Core.dll
+|           |   Azure.Identity.dll
+|           |   Humanizer.dll
+|           |   Microsoft.Bcl.AsyncInterfaces.dll
+|           |   Microsoft.Build.Locator.dll
+|           |   Microsoft.CodeAnalysis.CSharp.dll
+|           |   Microsoft.CodeAnalysis.CSharp.Workspaces.dll
+|           |   Microsoft.CodeAnalysis.dll
+|           |   Microsoft.CodeAnalysis.Workspaces.dll
+|           |   Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.dll
+|           |   Microsoft.CodeAnalysis.Workspaces.MSBuild.dll
+|           |   Microsoft.Data.SqlClient.dll
+|           |   Microsoft.EntityFrameworkCore.Abstractions.dll
+|           |   Microsoft.EntityFrameworkCore.Design.dll
+|           |   Microsoft.EntityFrameworkCore.dll
+|           |   Microsoft.EntityFrameworkCore.Relational.dll
+|           |   Microsoft.EntityFrameworkCore.SqlServer.dll
+|           |   Microsoft.Extensions.Caching.Abstractions.dll
+|           |   Microsoft.Extensions.Caching.Memory.dll
+|           |   Microsoft.Extensions.Configuration.Abstractions.dll
+|           |   Microsoft.Extensions.DependencyInjection.Abstractions.dll
+|           |   Microsoft.Extensions.DependencyInjection.dll
+|           |   Microsoft.Extensions.DependencyModel.dll
+|           |   Microsoft.Extensions.Logging.Abstractions.dll
+|           |   Microsoft.Extensions.Logging.dll
+|           |   Microsoft.Extensions.Options.dll
+|           |   Microsoft.Extensions.Primitives.dll
+|           |   Microsoft.Identity.Client.dll
+|           |   Microsoft.Identity.Client.Extensions.Msal.dll
+|           |   Microsoft.IdentityModel.Abstractions.dll
+|           |   Microsoft.IdentityModel.JsonWebTokens.dll
+|           |   Microsoft.IdentityModel.Logging.dll
+|           |   Microsoft.IdentityModel.Protocols.dll
+|           |   Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+|           |   Microsoft.IdentityModel.Tokens.dll
+|           |   Microsoft.SqlServer.Server.dll
+|           |   Microsoft.Win32.SystemEvents.dll
+|           |   Mono.TextTemplating.dll
+|           |   Newtonsoft.Json.dll
+|           |   RemoteDesktopOnlineApps.deps.json
+|           |   RemoteDesktopOnlineApps.dll
+|           |   RemoteDesktopOnlineApps.exe
+|           |   RemoteDesktopOnlineApps.pdb
+|           |   RemoteDesktopOnlineApps.runtimeconfig.json
+|           |   RemoteDesktopOnlineApps.staticwebassets.endpoints.json
+|           |   RemoteDesktopOnlineApps.staticwebassets.runtime.json
+|           |   System.ClientModel.dll
+|           |   System.CodeDom.dll
+|           |   System.Composition.AttributedModel.dll
+|           |   System.Composition.Convention.dll
+|           |   System.Composition.Hosting.dll
+|           |   System.Composition.Runtime.dll
+|           |   System.Composition.TypedParts.dll
+|           |   System.Configuration.ConfigurationManager.dll
+|           |   System.Drawing.Common.dll
+|           |   System.Formats.Asn1.dll
+|           |   System.IdentityModel.Tokens.Jwt.dll
+|           |   System.Memory.Data.dll
+|           |   System.Net.WebSockets.WebSocketProtocol.dll
+|           |   System.Runtime.Caching.dll
+|           |   System.Security.Cryptography.ProtectedData.dll
+|           |   System.Security.Permissions.dll
+|           |   System.Text.Json.dll
+|           |   System.Windows.Extensions.dll
+|           |   
+|           +---cs
+|           |       Microsoft.CodeAnalysis.CSharp.resources.dll
+|           |       Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+|           |       Microsoft.CodeAnalysis.resources.dll
+|           |       Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+|           |       Microsoft.CodeAnalysis.Workspaces.resources.dll
+|           |       
+|           +---de
+|           |       Microsoft.CodeAnalysis.CSharp.resources.dll
+|           |       Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+|           |       Microsoft.CodeAnalysis.resources.dll
+|           |       Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+|           |       Microsoft.CodeAnalysis.Workspaces.resources.dll
+|           |       
+|           +---es
+|           |       Microsoft.CodeAnalysis.CSharp.resources.dll
+|           |       Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+|           |       Microsoft.CodeAnalysis.resources.dll
+|           |       Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+|           |       Microsoft.CodeAnalysis.Workspaces.resources.dll
+|           |       
+|           +---fr
+|           |       Microsoft.CodeAnalysis.CSharp.resources.dll
+|           |       Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+|           |       Microsoft.CodeAnalysis.resources.dll
+|           |       Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+|           |       Microsoft.CodeAnalysis.Workspaces.resources.dll
+|           |       
+|           +---it
+|           |       Microsoft.CodeAnalysis.CSharp.resources.dll
+|           |       Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+|           |       Microsoft.CodeAnalysis.resources.dll
+|           |       Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+|           |       Microsoft.CodeAnalysis.Workspaces.resources.dll
+|           |       
+|           +---ja
+|           |       Microsoft.CodeAnalysis.CSharp.resources.dll
+|           |       Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+|           |       Microsoft.CodeAnalysis.resources.dll
+|           |       Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+|           |       Microsoft.CodeAnalysis.Workspaces.resources.dll
+|           |       
+|           +---ko
+|           |       Microsoft.CodeAnalysis.CSharp.resources.dll
+|           |       Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+|           |       Microsoft.CodeAnalysis.resources.dll
+|           |       Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+|           |       Microsoft.CodeAnalysis.Workspaces.resources.dll
+|           |       
+|           +---pl
+|           |       Microsoft.CodeAnalysis.CSharp.resources.dll
+|           |       Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+|           |       Microsoft.CodeAnalysis.resources.dll
+|           |       Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+|           |       Microsoft.CodeAnalysis.Workspaces.resources.dll
+|           |       
+|           +---pt-BR
+|           |       Microsoft.CodeAnalysis.CSharp.resources.dll
+|           |       Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+|           |       Microsoft.CodeAnalysis.resources.dll
+|           |       Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+|           |       Microsoft.CodeAnalysis.Workspaces.resources.dll
+|           |       
+|           +---ru
+|           |       Microsoft.CodeAnalysis.CSharp.resources.dll
+|           |       Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+|           |       Microsoft.CodeAnalysis.resources.dll
+|           |       Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+|           |       Microsoft.CodeAnalysis.Workspaces.resources.dll
+|           |       
+|           +---runtimes
+|           |   +---unix
+|           |   |   \---lib
+|           |   |       \---net6.0
+|           |   |               Microsoft.Data.SqlClient.dll
+|           |   |               System.Drawing.Common.dll
+|           |   |               
+|           |   +---win
+|           |   |   \---lib
+|           |   |       \---net6.0
+|           |   |               Microsoft.Data.SqlClient.dll
+|           |   |               Microsoft.Win32.SystemEvents.dll
+|           |   |               System.Drawing.Common.dll
+|           |   |               System.Runtime.Caching.dll
+|           |   |               System.Security.Cryptography.ProtectedData.dll
+|           |   |               System.Windows.Extensions.dll
+|           |   |               
+|           |   +---win-arm
+|           |   |   \---native
+|           |   |           Microsoft.Data.SqlClient.SNI.dll
+|           |   |           
+|           |   +---win-arm64
+|           |   |   \---native
+|           |   |           Microsoft.Data.SqlClient.SNI.dll
+|           |   |           
+|           |   +---win-x64
+|           |   |   \---native
+|           |   |           Microsoft.Data.SqlClient.SNI.dll
+|           |   |           
+|           |   \---win-x86
+|           |       \---native
+|           |               Microsoft.Data.SqlClient.SNI.dll
+|           |               
+|           +---tr
+|           |       Microsoft.CodeAnalysis.CSharp.resources.dll
+|           |       Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+|           |       Microsoft.CodeAnalysis.resources.dll
+|           |       Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+|           |       Microsoft.CodeAnalysis.Workspaces.resources.dll
+|           |       
+|           +---zh-Hans
+|           |       Microsoft.CodeAnalysis.CSharp.resources.dll
+|           |       Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+|           |       Microsoft.CodeAnalysis.resources.dll
+|           |       Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+|           |       Microsoft.CodeAnalysis.Workspaces.resources.dll
+|           |       
+|           \---zh-Hant
+|                   Microsoft.CodeAnalysis.CSharp.resources.dll
+|                   Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+|                   Microsoft.CodeAnalysis.resources.dll
+|                   Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+|                   Microsoft.CodeAnalysis.Workspaces.resources.dll
+|                   
++---Controllers
+|       AccountController.cs
+|       ChatController.cs
+|       ClientController.cs
+|       ConferenceController.cs
+|       DashboardController.cs
+|       FileTransferController.cs
+|       HomeController.cs
+|       NotificationController.cs
+|       RemoteSessionController.cs
+|       
++---Helpers
+|       EncryptionHelper.cs
+|       Helper.cs
+|       SignalRExtensions.cs
+|       WebRtcHelper.cs
+|       
++---Hubs
+|       ChatHub.cs
+|       ConferenceHub.cs
+|       NotificationHub.cs
+|       RemoteSessionHub.cs
+|       
++---Images
+|       avatar5.png
+|       Banner.jpg
+|       Ican.png
+|       Man.jpg
+|       
++---Migrations
+|       20250314141014_InitialCreate100.cs
+|       20250314141014_InitialCreate100.Designer.cs
+|       ApplicationDbContextModelSnapshot.cs
+|       
++---Models
+|       ApplicationDbContext.cs
+|       ChatMessage.cs
+|       ClientConnectionInfo.cs
+|       ClientRegistration.cs
+|       ErrorViewModel.cs
+|       FileTransfer.cs
+|       GroupMember.cs
+|       Notification.cs
+|       RemoteConnectionStats.cs
+|       RemoteSession.cs
+|       ServerAccess.cs
+|       ServerInfo.cs
+|       SessionParticipant.cs
+|       Users.cs
+|       
++---obj
+|   |   project.assets.json
+|   |   project.nuget.cache
+|   |   RemoteDesktopOnlineApps.csproj.EntityFrameworkCore.targets
+|   |   RemoteDesktopOnlineApps.csproj.nuget.dgspec.json
+|   |   RemoteDesktopOnlineApps.csproj.nuget.g.props
+|   |   RemoteDesktopOnlineApps.csproj.nuget.g.targets
+|   |   
+|   \---Debug
+|       \---net9.0
+|           |   .NETCoreApp,Version=v9.0.AssemblyAttributes.cs
+|           |   ApiEndpoints.json
+|           |   apphost.exe
+|           |   RemoteDe.0F503B0E.Up2Date
+|           |   RemoteDesktopOnlineApps.AssemblyInfo.cs
+|           |   RemoteDesktopOnlineApps.AssemblyInfoInputs.cache
+|           |   RemoteDesktopOnlineApps.assets.cache
+|           |   RemoteDesktopOnlineApps.csproj.AssemblyReference.cache
+|           |   RemoteDesktopOnlineApps.csproj.BuildWithSkipAnalyzers
+|           |   RemoteDesktopOnlineApps.csproj.CoreCompileInputs.cache
+|           |   RemoteDesktopOnlineApps.csproj.FileListAbsolute.txt
+|           |   RemoteDesktopOnlineApps.dll
+|           |   RemoteDesktopOnlineApps.GeneratedMSBuildEditorConfig.editorconfig
+|           |   RemoteDesktopOnlineApps.genruntimeconfig.cache
+|           |   RemoteDesktopOnlineApps.GlobalUsings.g.cs
+|           |   RemoteDesktopOnlineApps.MvcApplicationPartsAssemblyInfo.cache
+|           |   RemoteDesktopOnlineApps.pdb
+|           |   RemoteDesktopOnlineApps.RazorAssemblyInfo.cache
+|           |   RemoteDesktopOnlineApps.RazorAssemblyInfo.cs
+|           |   staticwebassets.build.endpoints.json
+|           |   staticwebassets.build.json
+|           |   staticwebassets.development.json
+|           |   staticwebassets.pack.json
+|           |   staticwebassets.references.upToDateCheck.txt
+|           |   staticwebassets.removed.txt
+|           |   staticwebassets.upToDateCheck.txt
+|           |   
+|           +---compressed
+|           |       04nf089fg7-hrwsygsryq.gz
+|           |       05wx9hwe2z-r4e9w2rdcm.gz
+|           |       0c4yb69liv-2z0ns9nrw6.gz
+|           |       0hjrjy0dm4-xmhyb0nn5m.gz
+|           |       0kvrur070b-dxx9fxp4il.gz
+|           |       0t3evzy5t9-bqjiyaj88i.gz
+|           |       0v1tuz15no-ag7o75518u.gz
+|           |       1h37tmlqkr-tdbxkamptv.gz
+|           |       29f7l27myi-khv3u5hwcm.gz
+|           |       2g7j9tq9a6-xmhyb0nn5m.gz
+|           |       2ntalyonsz-ttgo8qnofa.gz
+|           |       2rksfe0o0h-mlv21k5csn.gz
+|           |       3vnuf1yml5-vr1egmr9el.gz
+|           |       3xnia120gz-mrlpezrjn3.gz
+|           |       481lmb4pmy-4v8eqarkd7.gz
+|           |       48lhd9zux9-erw9l3u2r3.gz
+|           |       51lbq5lht9-mrxos0xk3e.gz
+|           |       6vl47yi15p-6pdc2jztkx.gz
+|           |       6zcqnlnf79-o1o13a6vjx.gz
+|           |       7cnd786c2i-pk9g2wxc8p.gz
+|           |       935pm56kyy-lzl9nlhx6b.gz
+|           |       9ct4iuvc1l-46ein0sx1k.gz
+|           |       9oinmh3hqp-notf2xhcfb.gz
+|           |       9pa408sup9-k8d9w2qqmf.gz
+|           |       9u3ngdrh7m-pbluviewqm.gz
+|           |       aejixyxk4c-jh4oh8n0l3.gz
+|           |       awoegq0lj3-x0q3zqp4vz.gz
+|           |       b1azugm1qu-87fc7y1x7t.gz
+|           |       chey0578yb-ft3s53vfgj.gz
+|           |       ei5fdt0h3n-pj5nd1wqec.gz
+|           |       f62y03l8hg-s35ty4nyc5.gz
+|           |       fgivcp8rs5-ausgxo2sd3.gz
+|           |       ft1b7xo2e8-06098lyss8.gz
+|           |       fuxv2bwtb1-lcd1t2u6c8.gz
+|           |       fvw2o8jfvz-y7v9cxd14o.gz
+|           |       goxoy9v5wf-jj8uyg4cgr.gz
+|           |       hj9q87vxs9-aexeepp0ev.gz
+|           |       hnpjwox62x-xtxxf3hu2r.gz
+|           |       iep3j3er6m-37tfw0ft22.gz
+|           |       ig0donitla-b9sayid5wm.gz
+|           |       j8eg9upztf-rzd6atqjts.gz
+|           |       k3d3hkl1gp-fvhpjtyr6v.gz
+|           |       kcvi7wepky-muycvpuwrr.gz
+|           |       knllnwsab6-cosvhxvwiu.gz
+|           |       kx7obe8km4-ee0r1s7dh0.gz
+|           |       l7wgqegtlp-j5mq2jizvt.gz
+|           |       lai9szcyld-kbrnm935zg.gz
+|           |       m0c6vpjwcp-0i3buxo5is.gz
+|           |       mcl36lxvp0-61n19gt1b8.gz
+|           |       mw59x2vxq6-c2jlpeoesf.gz
+|           |       nbe80jbxv2-v0zj4ognzu.gz
+|           |       os4u1sqnb4-b7pk76d08c.gz
+|           |       qkz9dpkrae-83jwlth58m.gz
+|           |       r3sjhx7n37-d7shbmvgxk.gz
+|           |       rc0wmmhnhd-ub07r2b239.gz
+|           |       runc99zvd1-nvvlpmu67g.gz
+|           |       rxcu0cd7u9-6cfz1n2cew.gz
+|           |       sz2i29ufww-jd9uben2k1.gz
+|           |       szo23x7k42-47otxtyo56.gz
+|           |       u4wz50kl9e-iovd86k7lj.gz
+|           |       u87xgxumr7-356vix0kms.gz
+|           |       uxju0arbqd-c2oey78nd0.gz
+|           |       xvq01t9ivv-63fj8s7r0e.gz
+|           |       y4wwuq7vel-fsbi9cje9m.gz
+|           |       yb9w73qcct-0j3bgjxly4.gz
+|           |       yr1f7nf9e5-h1s4sie4z3.gz
+|           |       zaazahy2sy-493y06b0oq.gz
+|           |       zhhwncmjjj-ur3nb3u6rj.gz
+|           |       
+|           +---ref
+|           |       RemoteDesktopOnlineApps.dll
+|           |       
+|           +---refint
+|           |       RemoteDesktopOnlineApps.dll
+|           |       
+|           +---scopedcss
+|           |   +---bundle
+|           |   |       RemoteDesktopOnlineApps.styles.css
+|           |   |       
+|           |   +---projectbundle
+|           |   |       RemoteDesktopOnlineApps.bundle.scp.css
+|           |   |       
+|           |   \---Views
+|           |       \---Shared
+|           |               _Layout.cshtml.rz.scp.css
+|           |               
+|           \---staticwebassets
+|                   msbuild.build.RemoteDesktopOnlineApps.props
+|                   msbuild.buildMultiTargeting.RemoteDesktopOnlineApps.props
+|                   msbuild.buildTransitive.RemoteDesktopOnlineApps.props
+|                   msbuild.RemoteDesktopOnlineApps.Microsoft.AspNetCore.StaticWebAssetEndpoints.props
+|                   msbuild.RemoteDesktopOnlineApps.Microsoft.AspNetCore.StaticWebAssets.props
+|                   
++---Properties
+|       launchSettings.json
+|       
++---Services
+|       AuthorizationService.cs
+|       ClientIdentificationService.cs
+|       CurrentUserService.cs
+|       EncryptionService.cs
+|       FileTransferService.cs
+|       IdentityService.cs
+|       IEncryptionService.cs
+|       IFileTransferService.cs
+|       IRemoteDesktopService.cs
+|       IRemoteDesktopStatsService.cs
+|       IWebRTCSignalingService.cs
+|       NotificationService.cs
+|       RemoteDesktopService.cs
+|       RemoteDesktopStatsService.cs
+|       WebRTCSignalingService.cs
+|       
++---ViewModels
+|       AccountRegisterViewModel.cs
+|       RemoteSessionViewModel.cs
+|       
++---Views
+|   |   _ViewImports.cshtml
+|   |   _ViewStart.cshtml
+|   |   
+|   +---Account
+|   |       EditProfile.cshtml
+|   |       Index.cshtml
+|   |       Login.cshtml
+|   |       Register.cshtml
+|   |       
+|   +---Chat
+|   |       Index.cshtml
+|   |       SessionList.cshtml
+|   |       
+|   +---Client
+|   |       Index.cshtml
+|   |       
+|   +---Conference
+|   |       Index.cshtml
+|   |       
+|   +---Home
+|   |       Index.cshtml
+|   |       Privacy.cshtml
+|   |       
+|   +---Notification
+|   |       Index.cshtml
+|   |       _NotificationsDropdown.cshtml
+|   |       _NotificationsList.cshtml
+|   |       
+|   +---RemoteSession
+|   |       Connect.cshtml
+|   |       Index.cshtml
+|   |       Session.cshtml
+|   |       
+|   \---Shared
+|           Error.cshtml
+|           _Layout.cshtml
+|           _Layout.cshtml.css
+|           _LoginPartial.cshtml
+|           _SessionLayout.cshtml
+|           _ValidationScriptsPartial.cshtml
+|           
+\---wwwroot
+    |   favicon.ico
+    |   
+    +---css
+    |       MainStyleSheet.css
+    |       RemoteSetionStyleSheet.css
+    |       site.css
+    |       
+    +---js
+    |       site.js
+    |       webrtc-stats-js.txt
+    |       webrtc-stats.js
+    |       
+    \---lib
+        +---bootstrap
+        |   |   LICENSE
+        |   |   
+        |   \---dist
+        |       +---css
+        |       |       bootstrap-grid.css
+        |       |       bootstrap-grid.css.map
+        |       |       bootstrap-grid.min.css
+        |       |       bootstrap-grid.min.css.map
+        |       |       bootstrap-grid.rtl.css
+        |       |       bootstrap-grid.rtl.css.map
+        |       |       bootstrap-grid.rtl.min.css
+        |       |       bootstrap-grid.rtl.min.css.map
+        |       |       bootstrap-reboot.css
+        |       |       bootstrap-reboot.css.map
+        |       |       bootstrap-reboot.min.css
+        |       |       bootstrap-reboot.min.css.map
+        |       |       bootstrap-reboot.rtl.css
+        |       |       bootstrap-reboot.rtl.css.map
+        |       |       bootstrap-reboot.rtl.min.css
+        |       |       bootstrap-reboot.rtl.min.css.map
+        |       |       bootstrap-utilities.css
+        |       |       bootstrap-utilities.css.map
+        |       |       bootstrap-utilities.min.css
+        |       |       bootstrap-utilities.min.css.map
+        |       |       bootstrap-utilities.rtl.css
+        |       |       bootstrap-utilities.rtl.css.map
+        |       |       bootstrap-utilities.rtl.min.css
+        |       |       bootstrap-utilities.rtl.min.css.map
+        |       |       bootstrap.css
+        |       |       bootstrap.css.map
+        |       |       bootstrap.min.css
+        |       |       bootstrap.min.css.map
+        |       |       bootstrap.rtl.css
+        |       |       bootstrap.rtl.css.map
+        |       |       bootstrap.rtl.min.css
+        |       |       bootstrap.rtl.min.css.map
+        |       |       
+        |       \---js
+        |               bootstrap.bundle.js
+        |               bootstrap.bundle.js.map
+        |               bootstrap.bundle.min.js
+        |               bootstrap.bundle.min.js.map
+        |               bootstrap.esm.js
+        |               bootstrap.esm.js.map
+        |               bootstrap.esm.min.js
+        |               bootstrap.esm.min.js.map
+        |               bootstrap.js
+        |               bootstrap.js.map
+        |               bootstrap.min.js
+        |               bootstrap.min.js.map
+        |               
+        +---jquery
+        |   |   LICENSE.txt
+        |   |   
+        |   \---dist
+        |           jquery.js
+        |           jquery.min.js
+        |           jquery.min.map
+        |           jquery.slim.js
+        |           jquery.slim.min.js
+        |           jquery.slim.min.map
+        |           
+        +---jquery-validation
+        |   |   LICENSE.md
+        |   |   
+        |   \---dist
+        |           additional-methods.js
+        |           additional-methods.min.js
+        |           jquery.validate.js
+        |           jquery.validate.min.js
+        |           
+        \---jquery-validation-unobtrusive
+            |   LICENSE.txt
+            |   
+            \---dist
+                    jquery.validate.unobtrusive.js
+                    jquery.validate.unobtrusive.min.js
+                    

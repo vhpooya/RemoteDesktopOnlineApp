@@ -1,0 +1,278 @@
+﻿@using RemoteDesktopOnlineApps.Helpers
+@model IEnumerable<RemoteDesktopOnlineApps.Models.ChatMessage>
+@{
+    ViewData["Title"] = "گفتگو";
+    var session = ViewBag.Session as RemoteDesktopOnlineApps.Models.RemoteSession;
+    int userId = User.GetUserId();
+}
+
+<div class="container py-4">
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center py-3">
+            <div class="d-flex align-items-center">
+                <a href="@Url.Action("Index", "RemoteSession")" class="btn btn-sm btn-outline-light me-2">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <h5 class="mb-0">
+                    <i class="fas fa-comments me-2"></i>گفتگو: @session.ServerName
+                </h5>
+                <span class="badge bg-light text-primary ms-2">@(session.Status == "Active" ? "فعال" : session.Status)</span>
+            </div>
+            <div>
+                <button type="button" class="btn btn-sm btn-outline-light" id="btnRefresh">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="card-body p-0">
+            <div class="row g-0">
+                <!-- لیست شرکت‌کنندگان -->
+                <div class="col-md-3 border-end">
+                    <div class="p-3 border-bottom">
+                        <h6 class="mb-0">شرکت‌کنندگان</h6>
+                    </div>
+                    <div class="chat-participants" style="height: 500px; overflow-y: auto;">
+                        <div class="list-group list-group-flush">
+                            <!-- کاربر اصلی -->
+                            <a href="#" class="list-group-item list-group-item-action py-3">
+                                <div class="d-flex align-items-center">
+                                    <div class="position-relative">
+                                        <i class="fas fa-user-circle fa-2x text-primary"></i>
+                                        <span class="position-absolute bottom-0 start-100 translate-middle p-1 bg-success border border-light rounded-circle">
+                                            <span class="visually-hidden">آنلاین</span>
+                                        </span>
+                                    </div>
+                                    <div class="ms-3">
+                                        <h6 class="mb-0">@session.User.UserName</h6>
+                                        <small class="text-muted">میزبان</small>
+                                    </div>
+                                </div>
+                            </a>
+
+                            <!-- شرکت‌کنندگان دیگر -->
+                            @foreach (var participant in session.Participants.Where(p => !p.LeaveTime.HasValue))
+                            {
+                                <a href="#" class="list-group-item list-group-item-action py-3">
+                                    <div class="d-flex align-items-center">
+                                        <div class="position-relative">
+                                            <i class="fas fa-user-circle fa-2x text-secondary"></i>
+                                            <span class="position-absolute bottom-0 start-100 translate-middle p-1 bg-success border border-light rounded-circle">
+                                                <span class="visually-hidden">آنلاین</span>
+                                            </span>
+                                        </div>
+                                        <div class="ms-3">
+                                            <h6 class="mb-0">@participant.User.UserName</h6>
+                                            <small class="text-muted">شرکت‌کننده</small>
+                                        </div>
+                                    </div>
+                                </a>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <!-- بخش پیام‌ها -->
+                <div class="col-md-9">
+                    <div class="chat-container d-flex flex-column" style="height: 500px;">
+                        <!-- پیام‌ها -->
+                        <div class="chat-messages flex-grow-1 p-3" id="chatMessages" style="overflow-y: auto;">
+                            <div class="text-center text-muted my-3">
+                                <small>ابتدای مکالمه</small>
+                            </div>
+
+                            @foreach (var message in Model)
+                            {
+                                var isMine = message.SenderId == userId;
+
+                                <div class="chat-message @(isMine ? "sent" : "received") mb-3">
+                                    <div class="chat-message-content @(isMine ? "bg-primary bg-opacity-10" : "bg-light")
+                                          rounded-3 p-3 @(isMine ? "ms-auto" : "me-auto")"
+                                         style="max-width: 75%; @(isMine ? "border-bottom-right-radius: 0 !important;" : "border-bottom-left-radius: 0 !important;")">
+                                        <div class="d-flex justify-content-between align-items-center mb-1">
+                                            <div class="d-flex align-items-center">
+                                                <span class="fw-bold @(message.IsFromSupport ? "text-primary" : "")">
+                                                    @(isMine ? "شما" : message.SenderName)
+                                                </span>
+                                                @if (message.IsFromSupport)
+                                                {
+                                                    <span class="badge bg-primary ms-2">پشتیبان</span>
+                                                }
+                                            </div>
+                                            <small class="text-muted ms-3">@message.Timestamp.ToString("HH:mm")</small>
+                                        </div>
+                                        <div class="chat-message-text">
+                                            @message.Message
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                        <!-- فرم ارسال پیام -->
+                        <div class="chat-input p-3 border-top">
+                            <form id="chatForm" action="@Url.Action("Send", "Chat")" method="post">
+                                <input type="hidden" name="sessionId" value="@ViewBag.SessionId" />
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="message" name="message" placeholder="پیام خود را بنویسید..." required>
+                                    <button class="btn btn-primary" type="submit">
+                                        <i class="fas fa-paper-plane"></i>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/lib/signalr/signalr.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // اسکرول به آخرین پیام
+            scrollToBottom();
+
+            // ارسال پیام با Ajax
+            $('#chatForm').submit(function(e) {
+                e.preventDefault();
+
+                var formData = $(this).serialize();
+                var messageText = $('#message').val().trim();
+
+                if (messageText === '') {
+                    return false;
+                }
+
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: 'POST',
+                    data: formData,
+                    success: function(data) {
+                        // افزودن پیام جدید به چت
+                        addMessage(data);
+
+                        // پاک کردن فیلد پیام
+                        $('#message').val('');
+
+                        // اسکرول به پایین
+                        scrollToBottom();
+                    },
+                    error: function() {
+                        toastr.error('خطا در ارسال پیام!');
+                    }
+                });
+            });
+
+            // دریافت پیام‌های جدید
+            function loadNewMessages() {
+                var lastTimestamp = getLastMessageTimestamp();
+
+                $.ajax({
+                    url: '@Url.Action("GetMessages", "Chat")',
+                    type: 'GET',
+                    data: {
+                        sessionId: @ViewBag.SessionId,
+                        since: lastTimestamp
+                    },
+                    success: function(data) {
+                        if (data && data.length > 0) {
+                            for (var i = 0; i < data.length; i++) {
+                                addMessage(data[i]);
+                            }
+                            scrollToBottom();
+                        }
+                    }
+                });
+            }
+
+            // دریافت زمان آخرین پیام
+            function getLastMessageTimestamp() {
+                var messages = $('.chat-message');
+                if (messages.length === 0) {
+                    return null;
+                }
+
+                // در یک پیاده‌سازی واقعی، باید زمان پیام از یک data-attribute استخراج شود
+                return new Date().toISOString();
+            }
+
+            // افزودن پیام جدید به چت
+            function addMessage(message) {
+                var userId = @userId;
+                var isMine = message.senderId === userId;
+
+                var timestamp = new Date(message.timestamp);
+                var timeStr = timestamp.getHours() + ':' +
+                             (timestamp.getMinutes() < 10 ? '0' + timestamp.getMinutes() : timestamp.getMinutes());
+
+                var messageHtml = `
+                    <div class="chat-message ${isMine ? 'sent' : 'received'} mb-3">
+                        <div class="chat-message-content ${isMine ? 'bg-primary bg-opacity-10' : 'bg-light'}
+                              rounded-3 p-3 ${isMine ? 'ms-auto' : 'me-auto'}"
+                              style="max-width: 75%; ${isMine ? 'border-bottom-right-radius: 0 !important;' : 'border-bottom-left-radius: 0 !important;'}">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <div class="d-flex align-items-center">
+                                    <span class="fw-bold ${message.isFromSupport ? 'text-primary' : ''}">
+                                        ${isMine ? 'شما' : message.senderName}
+                                    </span>
+                                    ${message.isFromSupport ? '<span class="badge bg-primary ms-2">پشتیبان</span>' : ''}
+                                </div>
+                                <small class="text-muted ms-3">${timeStr}</small>
+                            </div>
+                            <div class="chat-message-text">
+                                ${message.message}
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                $('#chatMessages').append(messageHtml);
+            }
+
+            // اسکرول به آخرین پیام
+            function scrollToBottom() {
+                var container = $('#chatMessages');
+                container.scrollTop(container.prop('scrollHeight'));
+            }
+
+            // بروزرسانی خودکار پیام‌ها هر 5 ثانیه
+            setInterval(loadNewMessages, 5000);
+
+            // دکمه بروزرسانی دستی
+            $('#btnRefresh').click(function() {
+                loadNewMessages();
+            });
+
+            // اتصال به SignalR
+            const connection = new signalR.HubConnectionBuilder()
+                .withUrl("/chatHub")
+                .build();
+
+            connection.start().catch(function(err) {
+                console.error(err.toString());
+            });
+
+            // پیوستن به گروه چت
+            connection.on("connected", function() {
+                connection.invoke("JoinChatRoom", "@ViewBag.SessionId").catch(function(err) {
+                    console.error(err.toString());
+                });
+            });
+
+            // دریافت پیام جدید
+            connection.on("ReceiveMessage", function(id, senderName, message, timestamp, isFromSupport) {
+                addMessage({
+                    id: id,
+                    senderName: senderName,
+                    message: message,
+                    timestamp: timestamp,
+                    isFromSupport: isFromSupport
+                });
+                scrollToBottom();
+            });
+        });
+    </script>
+}

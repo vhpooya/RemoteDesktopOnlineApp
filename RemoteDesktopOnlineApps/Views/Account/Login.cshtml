@@ -1,0 +1,38 @@
+﻿@model RemoteDesktopOnlineApps.ViewModels.UserLoginViewModel
+@{
+    ViewData["Title"] = "ورود";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">ورود</h2>
+    <form asp-action="Login" method="post">
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label asp-for="UserName" class="form-label">نام کاربری</label>
+                <input asp-for="UserName" class="form-control" placeholder="نام کاربری خود را وارد کنید" />
+                <span asp-validation-for="UserName" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="Password" class="form-label">کلمه عبور</label>
+                <input asp-for="Password" type="password" class="form-control" placeholder="کلمه عبور خود را وارد کنید" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6 mb-3 form-check">
+                <input asp-for="RememberMe" type="checkbox" class="form-check-input" />
+                <label class="form-check-label" for="RememberMe">مرا به خاطر بسپار</label>
+            </div>
+
+            <div class="col-12 mb-3">
+                <button type="submit" class="btn btn-primary w-100">ورود</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

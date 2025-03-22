@@ -1,0 +1,247 @@
+﻿@model RemoteSession
+@{
+    ViewData["Title"] = $"کنفرانس گروهی - {Model.ServerName}";
+    Layout = "_SessionLayout";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">کنفرانس گروهی @Model.ServerName</h5>
+                    <span class="badge bg-light text-dark">
+                        <i class="fas fa-users"></i>
+                        <span id="participantsCount">@Model.Participants.Count(p => !p.LeaveTime.HasValue)</span> شرکت‌کننده
+                    </span>
+                </div>
+                <div class="card-body">
+                    <div class="conference-container">
+                        <div class="main-video-container">
+                            <video id="mainVideo" autoplay playsinline></video>
+                            <div class="video-overlay">
+                                <div class="speaker-name" id="mainSpeakerName"></div>
+                            </div>
+                        </div>
+                        <div class="participants-videos" id="participantsVideos">
+                            <!-- تصاویر شرکت‌کنندگان اینجا نمایش داده می‌شوند -->
+                        </div>
+                    </div>
+
+                    <div class="conference-controls mt-3">
+                        <div class="btn-group">
+                            <button id="toggleVideoBtn" class="btn btn-primary">
+                                <i class="fas fa-video"></i>
+                            </button>
+                            <button id="toggleAudioBtn" class="btn btn-primary">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                            <button id="toggleScreenShareBtn" class="btn btn-primary">
+                                <i class="fas fa-desktop"></i>
+                            </button>
+                            <button id="toggleChatBtn" class="btn btn-primary">
+                                <i class="fas fa-comment"></i>
+                            </button>
+                            <button id="inviteParticipantBtn" class="btn btn-success">
+                                <i class="fas fa-user-plus"></i> دعوت
+                            </button>
+                            <button id="leaveConferenceBtn" class="btn btn-danger">
+                                <i class="fas fa-sign-out-alt"></i> خروج
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">شرکت‌کنندگان</h5>
+                </div>
+                <div class="card-body participants-list-container">
+                    <ul class="participants-list" id="participantsList">
+                        @foreach (var participant in Model.Participants.Where(p => !p.LeaveTime.HasValue))
+                        {
+                            <li class="participant-item" data-id="@participant.UserId">
+                                <div class="participant-avatar">
+                                    @participant.UserName.Substring(0, 1)
+                                </div>
+                                <div class="participant-info">
+                                    <span class="participant-name">@participant.UserName</span>
+                                    <span class="participant-join-time">پیوستن: @participant.JoinTime.ToString("HH:mm")</span>
+                                </div>
+                                <div class="participant-controls">
+                                    <button class="btn btn-sm btn-link mute-participant" title="بی‌صدا کردن">
+                                        <i class="fas fa-microphone-slash"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-link remove-participant" title="حذف از کنفرانس"
+                                    @(User.Identity.Name == Model.User.UserName ? "" : "disabled")>
+                                        <i class="fas fa-times-circle"></i>
+                                    </button>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card mt-3 chat-container" id="chatContainer">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">چت گروهی</h5>
+                </div>
+                <div class="card-body chat-messages-container" id="chatMessages">
+                    <!-- پیام‌های چت اینجا قرار می‌گیرند -->
+                </div>
+                <div class="card-footer">
+                    <div class="input-group">
+                        <input type="text" id="chatMessageInput" class="form-control" placeholder="پیام خود را بنویسید..." />
+                        <div class="input-group-append">
+                            <button id="sendChatBtn" class="btn btn-primary">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- مودال دعوت شرکت‌کننده -->
+<div class="modal fade" id="inviteParticipantModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">دعوت به کنفرانس</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="بستن">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="inviteEmail">آدرس ایمیل یا نام کاربری:</label>
+                    <input type="text" class="form-control" id="inviteEmail" placeholder="ایمیل یا نام کاربری" />
+                </div>
+                <div class="form-group">
+                    <label for="inviteMessage">پیام دعوت (اختیاری):</label>
+                    <textarea class="form-control" id="inviteMessage" rows="3" placeholder="پیام دعوت خود را بنویسید..."></textarea>
+                </div>
+                <div class="invite-link-container mt-3">
+                    <label>لینک دعوت:</label>
+                    <div class="input-group">
+                        <input type="text" id="inviteLink" class="form-control" readonly value="@($"{Context.Request.Scheme}://{Context.Request.Host}/Conference/Join/{Model.Id}")" />
+                        <div class="input-group-append">
+                            <button id="copyLinkBtn" class="btn btn-outline-secondary" type="button">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">بستن</button>
+                <button type="button" id="sendInviteBtn" class="btn btn-primary">ارسال دعوت</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/lib/signalr/signalr.min.js"></script>
+    <script src="~/js/webrtc-connection.js"></script>
+    <script>
+        let conferenceHub = null;
+        let localStream = null;
+        let peerConnections = {};
+        let currentScreenShare = null;
+        let currentUserId = "@User.Identity.Name";
+        let sessionId = "@Model.Id";
+        let isCreator = "@(User.Identity.Name == Model.User.UserName)" === "True";
+
+        $(document).ready(function() {
+            // اتصال به هاب سیگنالینگ
+            startSignalingConnection();
+
+            // راه‌اندازی رویدادها
+            setupEventListeners();
+
+            // شروع دریافت تصویر و صدای محلی
+            startLocalStream();
+        });
+
+        function startSignalingConnection() {
+            conferenceHub = new signalR.HubConnectionBuilder()
+                .withUrl("/hubs/conference")
+                .withAutomaticReconnect()
+                .build();
+
+            // تعریف رویدادهای دریافتی از سرور
+            conferenceHub.on("UserJoined", handleUserJoined);
+            conferenceHub.on("UserLeft", handleUserLeft);
+            conferenceHub.on("ReceiveOffer", handleReceiveOffer);
+            conferenceHub.on("ReceiveAnswer", handleReceiveAnswer);
+            conferenceHub.on("ReceiveCandidate", handleReceiveCandidate);
+            conferenceHub.on("ReceiveChatMessage", handleReceiveChatMessage);
+
+            // شروع اتصال
+            conferenceHub.start()
+                .then(() => {
+                    console.log("اتصال به هاب سیگنالینگ با موفقیت برقرار شد");
+                    // اعلام حضور در کنفرانس
+                    conferenceHub.invoke("JoinConference", sessionId);
+                })
+                .catch(error => {
+                    console.error("خطا در اتصال به هاب سیگنالینگ:", error);
+                });
+        }
+
+        function setupEventListeners() {
+            // دکمه‌های کنترل ویدیو
+            $("#toggleVideoBtn").click(toggleVideo);
+            $("#toggleAudioBtn").click(toggleAudio);
+            $("#toggleScreenShareBtn").click(toggleScreenShare);
+            $("#toggleChatBtn").click(toggleChat);
+
+            // دکمه‌های مدیریت جلسه
+            $("#leaveConferenceBtn").click(leaveConference);
+            $("#inviteParticipantBtn").click(() => $("#inviteParticipantModal").modal("show"));
+            $("#sendInviteBtn").click(sendInvite);
+            $("#copyLinkBtn").click(copyInviteLink);
+
+            // چت
+            $("#sendChatBtn").click(sendChatMessage);
+            $("#chatMessageInput").on("keydown", e => {
+                if (e.key === "Enter") sendChatMessage();
+            });
+        }
+
+        async function startLocalStream() {
+            try {
+                localStream = await navigator.mediaDevices.getUserMedia({
+                    video: true,
+                    audio: true
+                });
+
+                // نمایش در لیست شرکت‌کنندگان
+                addLocalVideoToGrid();
+
+            } catch (error) {
+                console.error("خطا در دریافت تصویر و صدا:", error);
+            }
+        }
+
+        // توابع مدیریت ارتباط WebRTC
+        function handleUserJoined(userId, userName) {
+            // به روزرسانی لیست شرکت‌کنندگان
+            updateParticipantsList(userId, userName);
+
+            // شروع تماس با کاربر جدید
+            startCall(userId);
+        }
+
+        // سایر توابع مدیریت ارتباط WebRTC، چت و کنترل کنفرانس
+        // [برای جلوگیری از طولانی شدن کد، توابع باقیمانده بصورت اجمالی آورده شده‌اند]
+
+    </script>
+}

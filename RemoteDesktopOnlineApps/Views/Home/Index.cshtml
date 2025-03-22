@@ -1,0 +1,233 @@
+﻿@{
+    ViewData["Title"] = "خانه";
+}
+
+<div class="container">
+    <!-- هدر صفحه -->
+    <div class="py-5 text-center">
+        <img src="~/images/remote-support.png" alt="پشتیبانی از راه دور" class="img-fluid mb-4" style="max-height: 200px;">
+        <h1 class="display-4 fw-bold text-primary">سیستم پشتیبانی از راه دور</h1>
+        <p class="lead text-muted">
+            ارائه خدمات پشتیبانی فنی سریع، ایمن و آسان از راه دور با استفاده از تکنولوژی WebRTC
+        </p>
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mt-4">
+            <a asp-controller="RemoteSession" asp-action="Connect" class="btn btn-primary btn-lg px-4 gap-3">
+                <i class="fas fa-plug me-2"></i>شروع جلسه جدید
+            </a>
+            <a asp-controller="RemoteSession" asp-action="Index" class="btn btn-outline-secondary btn-lg px-4">
+                <i class="fas fa-history me-2"></i>جلسات قبلی
+            </a>
+        </div>
+    </div>
+
+    <!-- کارت‌های ویژگی‌ها -->
+    <div class="row g-4 py-5">
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-header py-3">
+                    <h5 class="my-0 text-center">
+                        <i class="fas fa-shield-alt me-2"></i>امنیت بالا
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mt-3 mb-4">
+                        <li class="mb-2">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            رمزنگاری اطلاعات انتهایی
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            احراز هویت دو مرحله‌ای
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            تاریخچه کامل ورود و خروج
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            مجوزهای سطح دسترسی مختلف
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-header py-3">
+                    <h5 class="my-0 text-center">
+                        <i class="fas fa-bolt me-2"></i>سرعت و کارایی
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mt-3 mb-4">
+                        <li class="mb-2">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            ارتباط مستقیم با WebRTC
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            کمترین تأخیر در انتقال تصویر
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            عملکرد بهینه حتی در شبکه‌های ضعیف
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            انتقال فایل با سرعت بالا
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-header py-3">
+                    <h5 class="my-0 text-center">
+                        <i class="fas fa-tools me-2"></i>امکانات پیشرفته
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mt-3 mb-4">
+                        <li class="mb-2">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            چت و ارتباط صوتی همزمان
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            اشتراک‌گذاری صفحه نمایش
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            انتقال فایل دوطرفه
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            ضبط جلسات و گزارش‌گیری
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- بخش آمار -->
+    <div class="row align-items-center py-5">
+        <div class="col-lg-6 mb-4 mb-lg-0">
+            <h2 class="fw-bold mb-4">چرا سیستم پشتیبانی از راه دور ما؟</h2>
+            <p class="lead mb-4">
+                سیستم پشتیبانی از راه دور ما یک راه‌حل امن، سریع و کارآمد برای ارائه خدمات پشتیبانی فنی است.
+                با استفاده از تکنولوژی WebRTC، ارتباط مستقیم و امن با کاربران برقرار می‌شود.
+            </p>
+            <div class="d-flex gap-4 justify-content-center justify-content-lg-start mt-5">
+                <div class="text-center">
+                    <h2 class="fw-bold text-primary">98%</h2>
+                    <p>رضایت مشتریان</p>
+                </div>
+                <div class="text-center">
+                    <h2 class="fw-bold text-primary">5K+</h2>
+                    <p>جلسات موفق</p>
+                </div>
+                <div class="text-center">
+                    <h2 class="fw-bold text-primary">200+</h2>
+                    <p>مشتری فعال</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card bg-light border-0">
+                <div class="card-body">
+                    <canvas id="statsChart" width="400" height="280"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- راهنمای استفاده -->
+    <div class="row py-5">
+        <div class="col-12 text-center mb-5">
+            <h2 class="fw-bold">چگونه کار می‌کند؟</h2>
+        </div>
+        <div class="col-md-3">
+            <div class="text-center mb-4">
+                <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 80px; height: 80px;">
+                    <i class="fas fa-desktop text-white fa-2x"></i>
+                </div>
+                <h5>۱. اتصال</h5>
+                <p class="text-muted">مشتری به سامانه متصل می‌شود و درخواست پشتیبانی می‌دهد.</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="text-center mb-4">
+                <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 80px; height: 80px;">
+                    <i class="fas fa-user-check text-white fa-2x"></i>
+                </div>
+                <h5>۲. تایید</h5>
+                <p class="text-muted">مشتری درخواست دسترسی را تایید می‌کند.</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="text-center mb-4">
+                <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 80px; height: 80px;">
+                    <i class="fas fa-laptop-code text-white fa-2x"></i>
+                </div>
+                <h5>۳. پشتیبانی</h5>
+                <p class="text-muted">کارشناس پشتیبانی به سیستم مشتری متصل می‌شود.</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="text-center mb-4">
+                <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 80px; height: 80px;">
+                    <i class="fas fa-check-circle text-white fa-2x"></i>
+                </div>
+                <h5>۴. حل مشکل</h5>
+                <p class="text-muted">مشکل مشتری به سرعت و با امنیت کامل حل می‌شود.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // نمودار آمار
+        var ctx = document.getElementById('statsChart').getContext('2d');
+        var statsChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور'],
+                datasets: [{
+                    label: 'جلسات ریموت',
+                    data: [156, 189, 210, 275, 298, 350],
+                    borderColor: '#3498db',
+                    backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }, {
+                    label: 'انتقال فایل',
+                    data: [85, 120, 135, 180, 210, 245],
+                    borderColor: '#2ecc71',
+                    backgroundColor: 'rgba(46, 204, 113, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'آمار استفاده از سیستم در ۶ ماه گذشته'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+}

@@ -1,0 +1,139 @@
+﻿<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - RemoteSupportPro</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.rtl.min.css" />
+    <link rel="stylesheet" href="~/lib/toastr/toastr.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/css/remote-session.css" />
+</head>
+<body>
+    <header class="remote-header">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/">RemoteSupportPro</a>
+                <div class="session-info">
+                    <span class="session-title">@ViewData["Title"]</span>
+                    <span class="session-duration" id="sessionDuration">00:00:00</span>
+                </div>
+                <div class="connection-info">
+                    <span class="connection-status">
+                        <span id="connectionStatus" class="status-indicator connected"></span>
+                        <span id="connectionStatusText">متصل</span>
+                    </span>
+                    <span class="internet-speed" id="internetSpeed">- Mbps</span>
+                </div>
+                <div class="navbar-nav">
+                    <div class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            @User.Identity.Name
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" href="/RemoteSession">لیست جلسات</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <form asp-controller="Account" asp-action="Logout" method="post">
+                                    <button type="submit" class="dropdown-item">خروج</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main role="main" class="remote-main">
+        @RenderBody()
+    </main>
+
+    <footer class="remote-footer text-white text-center">
+        <div class="container">
+            &copy; @DateTime.Now.Year - RemoteSupportPro - نرم‌افزار پشتیبانی ریموت دسکتاپ
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/toastr/toastr.min.js"></script>
+    <script src="~/lib/signalr/signalr.min.js"></script>
+    <script src="~/js/site.js"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+
+    <script>
+        // نمایش مدت زمان جلسه
+        (function() {
+            const startTime = new Date();
+            const durationElement = document.getElementById('sessionDuration');
+
+            function updateDuration() {
+                const currentTime = new Date();
+                const diff = Math.floor((currentTime - startTime) / 1000);
+
+                const hours = Math.floor(diff / 3600).toString().padStart(2, '0');
+                const minutes = Math.floor((diff % 3600) / 60).toString().padStart(2, '0');
+                const seconds = (diff % 60).toString().padStart(2, '0');
+
+                durationElement.textContent = `${hours}:${minutes}:${seconds}`;
+            }
+
+            setInterval(updateDuration, 1000);
+            updateDuration();
+        })();
+
+        // بررسی وضعیت اتصال و سرعت اینترنت
+        (function() {
+            const statusIndicator = document.getElementById('connectionStatus');
+            const statusText = document.getElementById('connectionStatusText');
+            const speedElement = document.getElementById('internetSpeed');
+
+            function updateConnectionStatus() {
+                if (navigator.onLine) {
+                    statusIndicator.className = 'status-indicator connected';
+                    statusText.textContent = 'متصل';
+                } else {
+                    statusIndicator.className = 'status-indicator disconnected';
+                    statusText.textContent = 'قطع';
+                }
+            }
+
+            function checkInternetSpeed() {
+                const imageUrl = '/images/speedtest.jpg?r=' + Math.random();
+                const downloadSize = 100 * 1024; // 100KB
+
+                const startTime = new Date().getTime();
+
+                const image = new Image();
+                image.onload = function() {
+                    const endTime = new Date().getTime();
+                    const duration = (endTime - startTime) / 1000; // ثانیه
+                    const bitsLoaded = downloadSize * 8;
+                    const speedBps = bitsLoaded / duration;
+                    const speedKbps = speedBps / 1024;
+                    const speedMbps = speedKbps / 1024;
+
+                    speedElement.textContent = speedMbps.toFixed(2) + ' Mbps';
+                };
+
+                image.onerror = function() {
+                    speedElement.textContent = '- Mbps';
+                };
+
+                image.src = imageUrl;
+            }
+
+            // بررسی وضعیت اتصال
+            window.addEventListener('online', updateConnectionStatus);
+            window.addEventListener('offline', updateConnectionStatus);
+            updateConnectionStatus();
+
+            // بررسی سرعت اینترنت هر 30 ثانیه
+            setInterval(checkInternetSpeed, 30000);
+            checkInternetSpeed();
+        })();
+    </script>
+</body>
+</html>

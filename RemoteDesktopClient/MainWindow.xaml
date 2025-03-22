@@ -1,0 +1,214 @@
+﻿<Window x:Class="RemoteDesktopClient.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RemoteDesktopClient"
+        mc:Ignorable="d"
+        Title="سیستم پشتیبانی از راه دور" Height="650" Width="900"
+        WindowStartupLocation="CenterScreen"
+        Loaded="Window_Loaded"
+        Closing="Window_Closing"
+        FlowDirection="RightToLeft">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- منو? برنامه -->
+        <Menu Grid.Row="0">
+            <MenuItem Header="فا?ل">
+                <MenuItem x:Name="menuSettings" Header="تنظ?مات" Click="MenuSettings_Click"/>
+                <Separator/>
+                <MenuItem x:Name="menuExit" Header="خروج" Click="MenuExit_Click"/>
+            </MenuItem>
+            <MenuItem Header="اتصال">
+                <MenuItem x:Name="menuConnect" Header="اتصال به سرور" Click="MenuConnect_Click"/>
+                <MenuItem x:Name="menuDisconnect" Header="قطع اتصال" Click="MenuDisconnect_Click" IsEnabled="False"/>
+                <Separator/>
+                <MenuItem x:Name="menuRemoteControl" Header="کنترل از راه دور">
+                    <MenuItem x:Name="menuRequestControl" Header="درخواست کنترل کامپ?وتر د?گر" Click="MenuRequestControl_Click" IsEnabled="False"/>
+                    <MenuItem x:Name="menuStopControl" Header="توقف کنترل از راه دور" Click="MenuStopControl_Click" IsEnabled="False"/>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Header="راهنما">
+                <MenuItem x:Name="menuAbout" Header="درباره برنامه" Click="MenuAbout_Click"/>
+            </MenuItem>
+        </Menu>
+
+        <!-- محتوا? اصل? -->
+        <TabControl Grid.Row="1" x:Name="mainTabControl">
+            <!-- تب وضع?ت اتصال -->
+            <TabItem Header="وضع?ت اتصال" x:Name="statusTab">
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- کارت اطلاعات اتصال -->
+                    <GroupBox Grid.Row="0" Header="اطلاعات اتصال من" Margin="0,0,0,10">
+                        <Grid Margin="10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="شناسه من:" Margin="0,5,10,5"/>
+                            <TextBox Grid.Row="0" Grid.Column="1" x:Name="txtMyId" IsReadOnly="True" Margin="0,5"/>
+                            <Button Grid.Row="0" Grid.Column="2" Content="کپ?" x:Name="btnCopyId" Click="BtnCopyId_Click" Width="60" Margin="10,5,0,5"/>
+
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="رمز ورود:" Margin="0,5,10,5"/>
+                            <PasswordBox Grid.Row="1" Grid.Column="1" x:Name="txtMyPassword" IsEnabled="False" Margin="0,5"/>
+                            <Button Grid.Row="1" Grid.Column="2" Content="نما?ش" x:Name="btnShowPassword" Click="BtnShowPassword_Click" Width="60" Margin="10,5,0,5"/>
+
+                            <TextBlock Grid.Row="2" Grid.Column="0" Text="نام کامپ?وتر:" Margin="0,5,10,5"/>
+                            <TextBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" x:Name="txtMyComputerName" IsReadOnly="True" Margin="0,5"/>
+
+                            <TextBlock Grid.Row="3" Grid.Column="0" Text="وضع?ت اتصال:" Margin="0,5,10,5"/>
+                            <TextBox Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" x:Name="txtConnectionStatus" Text="قطع" Foreground="Red" IsReadOnly="True" Margin="0,5"/>
+                        </Grid>
+                    </GroupBox>
+
+                    <!-- بخش اتصال به سرور -->
+                    <GroupBox Grid.Row="1" Header="اتصال به سرور" Margin="0,0,0,10">
+                        <Grid Margin="10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="آدرس سرور:" Margin="0,5,10,5"/>
+                            <TextBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" x:Name="txtServerUrl" Margin="0,5" Text="http://localhost:5000"/>
+
+                            <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"/>
+                            <Button Grid.Row="1" Grid.Column="2" Content="اتصال به سرور" x:Name="btnConnectToServer" Click="BtnConnectToServer_Click" Padding="10,5" Margin="0,5"/>
+                        </Grid>
+                    </GroupBox>
+
+                    <!-- بخش کنترل از راه دور -->
+                    <GroupBox Grid.Row="2" Header="کنترل از راه دور" Margin="0,0,0,10">
+                        <Grid Margin="10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="وضع?ت کنترل:" Margin="0,5,10,5"/>
+                            <TextBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" x:Name="txtControlStatus" Text="غ?رفعال" Foreground="Gray" IsReadOnly="True" Margin="0,5"/>
+
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="شناسه کاربر:" Margin="0,5,10,5"/>
+                            <TextBox Grid.Row="1" Grid.Column="1" x:Name="txtRemoteId" Margin="0,5"/>
+                            <Button Grid.Row="1" Grid.Column="2" Content="اتصال" x:Name="btnConnectToClient" Click="BtnConnectToClient_Click" Width="60" Margin="10,5,0,5" IsEnabled="False"/>
+
+                            <TextBlock Grid.Row="2" Grid.Column="0" Text="رمز ورود:" Margin="0,5,10,5"/>
+                            <PasswordBox Grid.Row="2" Grid.Column="1" x:Name="txtRemotePassword" Margin="0,5"/>
+                            <Button Grid.Row="2" Grid.Column="2" Content="قطع اتصال" x:Name="btnDisconnectRemote" Click="BtnDisconnectRemote_Click" Width="60" Margin="10,5,0,5" IsEnabled="False"/>
+                        </Grid>
+                    </GroupBox>
+
+                    <!-- پ?ام‌ها? س?ستم -->
+                    <GroupBox Grid.Row="3" Header="پ?ام‌ها? س?ستم" Margin="0,0,0,10">
+                        <ListBox x:Name="lstSystemMessages" Height="100" Margin="5"/>
+                    </GroupBox>
+
+                    <!-- درباره برنامه -->
+                    <GroupBox Grid.Row="4" Header="درباره برنامه" Margin="0,0,0,10">
+                        <TextBlock TextWrapping="Wrap" Margin="10" Text="س?ستم پشت?بان? از راه دور | نسخه 1.0.0&#x0a;&#x0a;ا?ن برنامه به شما امکان م?‌دهد به سا?ر کامپ?وترها متصل شده و آن‌ها را از راه دور کنترل کن?د، ?ا به کارشناسان پشت?بان? اجازه ده?د به کامپ?وتر شما متصل شوند.&#x0a;&#x0a;برا? در?افت پشت?بان?، شناسه و رمز ورود خود را در اخت?ار کارشناس پشت?بان? قرار ده?د. برا? کنترل کامپ?وتر د?گر، شناسه و رمز ورود آن را در?افت کرده و در بخش کنترل از راه دور وارد کن?د." />
+                    </GroupBox>
+                </Grid>
+            </TabItem>
+
+            <!-- تب نما?ش صفحه از راه دور -->
+            <TabItem Header="صفحه نما?ش" x:Name="remoteScreenTab">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- نوار ابزار -->
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="5">
+                        <Button x:Name="btnStartCapture" Content="شروع ارسال تصو?ر" Click="BtnStartCapture_Click" Margin="5" Padding="5" IsEnabled="False"/>
+                        <Button x:Name="btnStopCapture" Content="توقف ارسال تصو?ر" Click="BtnStopCapture_Click" Margin="5" Padding="5" IsEnabled="False"/>
+                        <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Margin="5,0"/>
+                        <TextBlock Text="ک?ف?ت تصو?ر:" VerticalAlignment="Center" Margin="5"/>
+                        <Slider x:Name="sldQuality" Width="100" Minimum="10" Maximum="100" Value="70" Margin="5" ValueChanged="SldQuality_ValueChanged"/>
+                        <TextBlock x:Name="txtQualityValue" Text="70%" VerticalAlignment="Center" Margin="5"/>
+                        <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Margin="5,0"/>
+                        <TextBlock Text="FPS:" VerticalAlignment="Center" Margin="5"/>
+                        <TextBlock x:Name="txtFps" Text="0" VerticalAlignment="Center" Margin="5" MinWidth="30"/>
+                    </StackPanel>
+
+                    <!-- منطقه نما?ش صفحه -->
+                    <Border Grid.Row="1" BorderBrush="Gray" BorderThickness="1" Margin="10">
+                        <Grid>
+                            <Image x:Name="imgRemoteScreen" Stretch="Uniform" 
+                                   MouseMove="ImgRemoteScreen_MouseMove"
+                                   MouseDown="ImgRemoteScreen_MouseDown"
+                                   MouseUp="ImgRemoteScreen_MouseUp"
+                                   MouseWheel="ImgRemoteScreen_MouseWheel"/>
+
+                            <TextBlock x:Name="txtNoConnection" 
+                                       Text="ه?چ اتصال فعال? وجود ندارد&#x0a;برا? شروع، به سرور متصل شو?د و سپس درخواست کنترل از راه دور ارسال کن?د ?ا منتظر درخواست از طرف د?گران بمان?د" 
+                                       HorizontalAlignment="Center" 
+                                       VerticalAlignment="Center" 
+                                       TextAlignment="Center"
+                                       TextWrapping="Wrap"
+                                       Foreground="Gray"
+                                       FontSize="14"/>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </TabItem>
+        </TabControl>
+
+        <!-- نوار وضع?ت -->
+        <StatusBar Grid.Row="2">
+            <StatusBarItem>
+                <TextBlock x:Name="txtStatusMessage" Text="آماده" />
+            </StatusBarItem>
+            <Separator />
+            <StatusBarItem>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="وضع?ت اتصال: " />
+                    <TextBlock x:Name="txtStatusConnection" Text="قطع" Foreground="Red" />
+                </StackPanel>
+            </StatusBarItem>
+            <Separator />
+            <StatusBarItem>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="کنترل از راه دور: " />
+                    <TextBlock x:Name="txtStatusRemoteControl" Text="غ?رفعال" Foreground="Gray" />
+                </StackPanel>
+            </StatusBarItem>
+            <Separator />
+            <StatusBarItem>
+                <ProgressBar x:Name="prgProgress" Width="100" Height="15" Visibility="Collapsed" />
+            </StatusBarItem>
+        </StatusBar>
+    </Grid>
+</Window>

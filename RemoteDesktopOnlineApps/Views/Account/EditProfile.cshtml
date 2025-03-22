@@ -1,0 +1,57 @@
+﻿@model RemoteDesktopOnlineApps.ViewModels.AccountProfile
+@{
+    ViewData["Title"] = "ویرایش پروفایل";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">ویرایش پروفایل</h2>
+    <form asp-action="EditProfile" method="post" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label asp-for="FirstName" class="form-label">نام</label>
+                <input asp-for="FirstName" class="form-control" placeholder="نام خود را وارد کنید" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="LastName" class="form-label">نام خانوادگی</label>
+                <input asp-for="LastName" class="form-control" placeholder="نام خانوادگی خود را وارد کنید" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="NationalCode" class="form-label">کد ملی</label>
+                <input asp-for="NationalCode" class="form-control" placeholder="کد ملی خود را وارد کنید" />
+                <span asp-validation-for="NationalCode" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="TellNum" class="form-label">تلفن</label>
+                <input asp-for="TellNum" class="form-control" placeholder="تلفن خود را وارد کنید" />
+                <span asp-validation-for="TellNum" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="EMail" class="form-label">ایمیل</label>
+                <input asp-for="EMail" class="form-control" placeholder="ایمیل خود را وارد کنید" />
+                <span asp-validation-for="EMail" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="Avatar" class="form-label">تصویر پروفایل</label>
+                <input asp-for="Avatar" type="file" class="form-control" />
+                <span asp-validation-for="Avatar" class="text-danger"></span>
+            </div>
+
+            <div class="col-12 mb-3">
+                <button type="submit" class="btn btn-primary w-100">ذخیره تغییرات</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

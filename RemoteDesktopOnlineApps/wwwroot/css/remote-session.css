@@ -1,0 +1,127 @@
+﻿/* استایل صفحه ریموت */
+.remote-session-container {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 56px); /* ارتفاع کامل صفحه منهای نوار ناوبری */
+    overflow: hidden;
+}
+
+.remote-content-container {
+    flex: 1;
+    overflow: hidden;
+}
+
+.remote-screen-area {
+    background-color: #222;
+    color: white;
+    overflow: hidden;
+    position: relative;
+}
+
+.remote-sidebar {
+    width: 350px;
+    border-right: 1px solid #dee2e6;
+    height: 100%;
+    overflow: hidden;
+}
+
+.remote-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    z-index: 1;
+}
+
+.remote-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.remote-cursor {
+    position: absolute;
+    color: yellow;
+    font-size: 18px;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    transition: all 0.05s linear;
+    z-index: 3;
+    display: none;
+}
+
+/* استایل چت */
+.chat-messages {
+    overflow-y: auto;
+    max-height: 100%;
+}
+
+.chat-message {
+    margin-bottom: 10px;
+}
+
+.chat-message-content {
+    padding: 8px 12px;
+    border-radius: 12px;
+    max-width: 80%;
+}
+
+.chat-message.sent {
+    text-align: right;
+}
+
+    .chat-message.sent .chat-message-content {
+        background-color: #e3f2fd;
+        margin-left: auto;
+        border-bottom-right-radius: 0;
+    }
+
+.chat-message.received .chat-message-content {
+    background-color: #f5f5f5;
+    margin-right: auto;
+    border-bottom-left-radius: 0;
+}
+
+.chat-message-sender {
+    font-weight: 500;
+    font-size: 0.85rem;
+}
+
+/* استایل مرورگر فایل */
+.file-browser {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+/* وضعیت اتصال */
+.connection-status {
+    background-color: #28a745;
+    transition: background-color 0.3s ease;
+}
+
+    .connection-status.connecting {
+        background-color: #ffc107;
+    }
+
+    .connection-status.disconnected {
+        background-color: #dc3545;
+    }
+
+/* استایل‌های پاسخگو */
+@media (max-width: 768px) {
+    .remote-sidebar {
+        position: absolute;
+        right: 0;
+        top: 0;
+        height: 100%;
+        z-index: 100;
+        width: 100%;
+        max-width: 350px;
+    }
+}

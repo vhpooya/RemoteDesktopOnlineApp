@@ -1,0 +1,193 @@
+﻿<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - سیستم پشتیبانی از راه دور</title>
+    <!-- فونت‌آوسام برای آیکون‌ها -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <!-- بوت‌استرپ 5 راست-به-چپ -->
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.rtl.min.css" />
+
+
+    <!-- نوتیفیکیشن توستر -->
+    <link rel="stylesheet" href="~/css/toastr.min.css" />
+    <!-- استایل سفارشی -->
+    <link rel="stylesheet" href="~/css/site.css" />
+    <!-- فونت‌های فارسی -->
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/mainstylesheet.css" rel="stylesheet" />
+
+    @RenderSection("Styles", required: false)
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark border-bottom mb-4">
+            <div class="container">
+                <a class="navbar-brand" asp-controller="Home" asp-action="Index">
+                    <i class="fas fa-desktop me-2"></i>سیستم پشتیبانی از راه دور
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-lg-inline-flex justify-content-between">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="Index">
+                                <i class="fas fa-home me-1"></i> خانه
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="RemoteSession" asp-action="Index">
+                                <i class="fas fa-laptop me-1"></i> جلسات ریموت
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="RemoteSession" asp-action="Connect">
+                                <i class="fas fa-plug me-1"></i> جلسه جدید
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Client" asp-action="Index">
+                                <i class="fas fa-id-card me-1"></i> اطلاعات اتصال
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="d-flex align-items-center">
+                        <!-- احراز هویت -->
+                        <partial name="_LoginPartial" />
+
+                        <!-- آیکون نوتیفیکیشن‌ها -->
+                        <div class="dropdown ms-3 position-relative">
+                            <a class="btn btn-outline-light rounded-circle" href="#" role="button" id="notificationDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-bell"></i>
+                                <span class="badge bg-danger badge-notification">3</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end p-2" aria-labelledby="notificationDropdown" style="min-width: 300px; max-height: 400px; overflow-y: auto;">
+                                <li class="dropdown-header">اعلان‌ها</li>
+                                <li><hr class="dropdown-divider"></li>
+                                <div id="notificationsContainer">
+                                    <!-- اینجا نوتیفیکیشن‌ها با جاوااسکریپت پر می‌شود -->
+                                    <div class="p-2 text-center">
+                                        <small>درحال دریافت اعلان‌ها...</small>
+                                        <div class="loading-spinner mx-auto mt-2"></div>
+                                    </div>
+                                </div>
+                                <li><hr class="dropdown-divider"></li>
+                                <li class="text-center">
+                                    <a href="#" class="text-primary text-decoration-none">نمایش همه</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="footer border-top text-white text-center py-3">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 text-md-start">
+                    <h5>سیستم پشتیبانی از راه دور</h5>
+                    <p class="small mb-0">ارائه خدمات پشتیبانی فنی سریع و امن از راه دور</p>
+                </div>
+                <div class="col-md-4">
+                    <h5>لینک‌های مفید</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-decoration-none">راهنمای استفاده</a></li>
+                        <li><a asp-controller="Home" asp-action="Privacy" class="text-decoration-none">حریم خصوصی</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <p class="mb-0">© @DateTime.Now.Year - تمامی حقوق محفوظ است</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- اسکریپت‌ها -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/toastr.min.js"></script>
+    <script src="~/js/chart.min.js"></script>
+    <script src="~/js/signalr.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <!-- تنظیمات توستر -->
+    <script>
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-bottom-left",
+            "timeOut": "5000",
+            "rtl": true
+        };
+
+        // شبیه‌سازی دریافت نوتیفیکیشن‌ها
+        $(document).ready(function() {
+            setTimeout(function() {
+                loadNotifications();
+            }, 1000);
+        });
+
+        function loadNotifications() {
+            // در اینجا باید با AJAX نوتیفیکیشن‌ها را دریافت کنیم
+            // برای نمونه، چند نوتیفیکیشن ثابت نمایش می‌دهیم
+            var notifications = [
+                { id: 1, title: "درخواست جدید", message: "یک درخواست جدید ریموت دسکتاپ دریافت شد", type: "info", time: "۱۰ دقیقه پیش" },
+                { id: 2, title: "انتقال فایل", message: "فایل گزارش.pdf با موفقیت آپلود شد", type: "success", time: "۲۵ دقیقه پیش" },
+                { id: 3, title: "هشدار امنیتی", message: "تلاش ناموفق برای ورود به سیستم", type: "warning", time: "۱ ساعت پیش" }
+            ];
+
+            var html = '';
+            if (notifications.length === 0) {
+                html = '<div class="p-3 text-center text-muted">اعلان جدیدی وجود ندارد</div>';
+            } else {
+                for (var i = 0; i < notifications.length; i++) {
+                    var n = notifications[i];
+                    var iconClass = "info-circle";
+                    var colorClass = "primary";
+
+                    if (n.type === "success") {
+                        iconClass = "check-circle";
+                        colorClass = "success";
+                    } else if (n.type === "warning") {
+                        iconClass = "exclamation-triangle";
+                        colorClass = "warning";
+                    } else if (n.type === "error") {
+                        iconClass = "times-circle";
+                        colorClass = "danger";
+                    }
+
+                    html += '<div class="notification-item p-2 rounded mb-2">';
+                    html += '  <div class="d-flex align-items-center">';
+                    html += '    <div class="flex-shrink-0">';
+                    html += '      <i class="fas fa-' + iconClass + ' text-' + colorClass + ' fa-lg"></i>';
+                    html += '    </div>';
+                    html += '    <div class="flex-grow-1 ms-2">';
+                    html += '      <div class="d-flex justify-content-between">';
+                    html += '        <h6 class="mb-0">' + n.title + '</h6>';
+                    html += '        <small class="text-muted">' + n.time + '</small>';
+                    html += '      </div>';
+                    html += '      <p class="mb-0 small">' + n.message + '</p>';
+                    html += '    </div>';
+                    html += '  </div>';
+                    html += '</div>';
+                }
+            }
+
+            $('#notificationsContainer').html(html);
+        }
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
