@@ -12,6 +12,7 @@ namespace RemoteDesktopOnlineApps.Hubs
         private readonly IRemoteDesktopService _remoteDesktopService;
         private readonly IRemoteDesktopStatsService _statsService;
         private readonly IClientIdentificationService _clientService;
+        private readonly IWebRTCSignalingService _signalingService;
 
         // مپ کردن شناسه کلاینت به شناسه اتصال SignalR
         private static readonly ConcurrentDictionary<string, string> _clientConnectionMap = new ConcurrentDictionary<string, string>();
@@ -25,11 +26,13 @@ namespace RemoteDesktopOnlineApps.Hubs
         public RemoteSessionHub(
             IRemoteDesktopService remoteDesktopService,
             IRemoteDesktopStatsService statsService,
-            IClientIdentificationService clientService)
+            IClientIdentificationService clientService,
+            IWebRTCSignalingService signalingService)
         {
             _remoteDesktopService = remoteDesktopService;
             _statsService = statsService;
             _clientService = clientService;
+            _signalingService = signalingService;
         }
 
         /// <summary>
@@ -280,6 +283,48 @@ namespace RemoteDesktopOnlineApps.Hubs
                     await Clients.Client(targetConnectionId).SendAsync("ReceiveKeyboardEvent", keyCode, isKeyDown);
                 }
             }
+        }
+
+        /// <summary>
+        /// دریافت پاسخ اتصال از کلاینت مقصد
+        /// </summary>
+        public Task ConnectionResponse(string requestId, bool accepted)
+        {
+            _signalingService.HandleConnectionResponse(requestId, accepted);
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// دریافت پاسخ پینگ از سرور مقصد
+        /// </summary>
+        public Task PingResponse(string requestId)
+        {
+            _signalingService.HandlePingResponse(requestId);
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// ارسال پیشنهاد WebRTC به سایر شرکت‌کنندگان
+        /// </summary>
+        public Task RelayOffer(int sessionId, string offer, string targetConnectionId = null)
+        {
+            return _signalingService.SendOfferAsync(sessionId, offer, targetConnectionId);
+        }
+
+        /// <summary>
+        /// ارسال پاسخ WebRTC به سایر شرکت‌کنندگان
+        /// </summary>
+        public Task RelayAnswer(int sessionId, string answer, string targetConnectionId = null)
+        {
+            return _signalingService.SendAnswerAsync(sessionId, answer, targetConnectionId);
+        }
+
+        /// <summary>
+        /// ارسال کاندید ICE به سایر شرکت‌کنندگان
+        /// </summary>
+        public Task RelayIceCandidate(int sessionId, string candidate, string targetConnectionId = null)
+        {
+            return _signalingService.SendIceCandidateAsync(sessionId, candidate, targetConnectionId);
         }
 
         /// <summary>
